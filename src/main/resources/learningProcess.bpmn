@@ -5,12 +5,12 @@
   </bpmn:collaboration>
   <bpmn:process id="ElerningP" name="Elerning" isExecutable="true">
     <bpmn:sequenceFlow id="SequenceFlow_1juav5m" name="No&#10;&#10;" sourceRef="RozhodnutiTestu" targetRef="ElerningText">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${otazka02}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!result}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1qkmd8z" name="Yes" sourceRef="RozhodnutiTestu" targetRef="end">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${otazka01}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${result}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1sw93mu" sourceRef="Test" targetRef="RozhodnutiTestu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sw93mu" sourceRef="Test" targetRef="Task_1g84khw" />
     <bpmn:sequenceFlow id="SequenceFlow_0z6yx9g" sourceRef="ElerningText" targetRef="Test" />
     <bpmn:sequenceFlow id="SequenceFlow_1mphopq" sourceRef="StartEvent_1" targetRef="ElerningText" />
     <bpmn:userTask id="ElerningText" name="Elerning&#10;" camunda:formKey="embedded:app:forms/Elerning.html" camunda:assignee="admin" camunda:candidateGroups="sales">
@@ -27,10 +27,13 @@
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="RozhodnutiTestu" name="correct answer ?">
       <bpmn:documentation>Zde se rozhoduje zdali je test ok</bpmn:documentation>
-      <bpmn:incoming>SequenceFlow_1sw93mu</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1xhjoyr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1qkmd8z</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1juav5m</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:startEvent id="StartEvent_1" name="Start&#10;&#10;" camunda:initiator="requestor">
+      <bpmn:outgoing>SequenceFlow_1mphopq</bpmn:outgoing>
+    </bpmn:startEvent>
     <bpmn:userTask id="Test" name="Test" camunda:formKey="embedded:app:forms/test.html" camunda:assignee="admin" camunda:candidateGroups="sales">
       <bpmn:extensionElements>
         <camunda:formData />
@@ -38,9 +41,11 @@
       <bpmn:incoming>SequenceFlow_0z6yx9g</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1sw93mu</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:startEvent id="StartEvent_1" name="Start&#10;&#10;" camunda:initiator="requestor">
-      <bpmn:outgoing>SequenceFlow_1mphopq</bpmn:outgoing>
-    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1xhjoyr" sourceRef="Task_1g84khw" targetRef="RozhodnutiTestu" />
+    <bpmn:serviceTask id="Task_1g84khw" name="Evaulation Test" camunda:class="org.camunda.bpm.Elerning.EvaluationTestService">
+      <bpmn:incoming>SequenceFlow_1sw93mu</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1xhjoyr</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ElearningProcess">
@@ -66,20 +71,22 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_040fl3o_di" bpmnElement="Test">
-        <dc:Bounds x="476" y="95" width="100" height="80" />
+        <dc:Bounds x="408" y="95" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0z6yx9g_di" bpmnElement="SequenceFlow_0z6yx9g">
         <di:waypoint xsi:type="dc:Point" x="360" y="135" />
-        <di:waypoint xsi:type="dc:Point" x="476" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="408" y="135" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="373" y="114" width="90" height="12" />
+          <dc:Bounds x="339" y="114" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1sw93mu_di" bpmnElement="SequenceFlow_1sw93mu">
-        <di:waypoint xsi:type="dc:Point" x="576" y="135" />
-        <di:waypoint xsi:type="dc:Point" x="698" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="508" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="528" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="528" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="548" y="135" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="592" y="114" width="90" height="12" />
+          <dc:Bounds x="498" y="129" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1qkmd8z_di" bpmnElement="SequenceFlow_1qkmd8z">
@@ -108,6 +115,18 @@
           <dc:Bounds x="175" y="114" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xhjoyr_di" bpmnElement="SequenceFlow_1xhjoyr">
+        <di:waypoint xsi:type="dc:Point" x="648" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="673" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="673" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="698" y="135" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="129" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0jqr02f_di" bpmnElement="Task_1g84khw">
+        <dc:Bounds x="548" y="95" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
