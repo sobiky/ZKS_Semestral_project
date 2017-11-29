@@ -1,14 +1,16 @@
 <form name="SelectedUserForm">
+    <p> Uzivatele, kterym se posle proces:</p>
     <div class="form-group">
-        <label for="selectlabel">Přiřazení Elerningu uživateli</label>
-        <select form-field
-                id="selectlabel"
-                name="selectBoxUsers"
-                type="String"
-                form-values="selectedUser">
-            <option value="admin">Admin</option>
-            <option value="test">Test</option>
-        </select>
+        <div ng-repeat="name in names">{{name}}
+        </div>
     </div>
-
+    <script cam-script type="text/form-script">
+     camForm.on('form-loaded', function() {
+        camForm.variableManager.fetchVariable('names');
+    });
+     camForm.on('variables-restored', function() {
+        $scope.names = camForm.variableManager.variableValue('names');
+    });
+    <!--debugger;-->
+    </script>
 </form>

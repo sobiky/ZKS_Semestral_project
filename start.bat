@@ -1,0 +1,1 @@
+ d:\Bakalarka\Camunda\server\jboss-as-7.2.0.Final\bin\standalone.bat
