@@ -26,11 +26,12 @@ public class SelectedUserFromDatabaseService implements JavaDelegate {
         }
         LOGGER.info("test funkcnosti : "+ Arrays.toString(userList.toArray()));
         LOGGER.info("test funkcnosti : "+ Arrays.toString(users.toArray()));
-        delegateExecution.setVariable("listNames",userList);
+        delegateExecution.setVariable("listUsersRaw",userList);
+        delegateExecution.setVariable("sizeListUserRaw",userList.size());
 //     serialization variables
         delegateExecution.setVariable("names", Variables.objectValue(users.toArray())
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
-        delegateExecution.setVariable("listUser",objectValue(userList)
+        delegateExecution.setVariable("listUserJson",objectValue(userList)
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
     }
 }
