@@ -1,0 +1,79 @@
+<form name="Starting">
+    <div class="form-group">
+        <script cam-script type="text/form-script">
+            var listUsers = $scope.listUsers={
+            userList:[]
+            };
+
+
+            $scope.addItem = function() {
+            $scope.listUsers.userList.push({firstName:'', lastName: '',email: '',group:''});
+            };
+
+            $scope.removeItem = function(index) {
+            $scope.listUsers.userList.splice(index, 1);
+            };
+            camForm.on('form-loaded', function() {
+            camForm.variableManager.createVariable({
+            name :'listUsers',
+            type:'json',
+            value:$scope.listUsers
+
+            });
+            });
+            <!--type:'Object',-->
+            <!--value:$scope.listUsers,-->
+            <!--valueInfo: {-->
+            <!--serializationDataFormat: 'application/json',-->
+            <!--objectTypeName: 'org.camunda.bpm.Elerning.model.ListUsers'-->
+            <!--}-->
+
+
+        </script>
+
+        <div>Nazev spolecnosti: <input cam-variable-name="tenant"
+                                       cam-variable-type="String"
+                                       type="text"></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="20%">Jmeno</th>
+                <th width="20%">Primeni</th>
+                <th width="20%">Email</th>
+                <th width="20%">Oddeleni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="i in listUsers.userList">
+                <td><input cam-variable-name="i.firstName"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.firstName"/></td>
+                <td><input cam-variable-name="i.lastName"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.lastName"/></td>
+                <!--dobelat validaci pro email-->
+                <td><input cam-variable-name="i.email"
+                           cam-variable-type="String"
+                           type="email" ng-model="i.email"/></td>
+                <td><input cam-variable-name="i.group"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.group"/></td>
+                <td>
+                    <button class="btn btn-default" ng-click="removeItem($index)">
+                        <span class="glyphicon glyphicon-minus"></span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-default" ng-click="addItem()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>
