@@ -1,13 +1,11 @@
 <form name="Starting">
     <div class="form-group">
         <script cam-script type="text/form-script">
-            var listUsers = $scope.listUsers={
-            userList:[]
-            };
+            var listUsers = $scope.listUsers=[];
 
 
             $scope.addItem = function() {
-            $scope.listUsers.userList.push({firstName:'', lastName: '',email: '',group:''});
+            $scope.listUsers.push({firstName:'', lastName: '',email: '',group:''});
             };
 
             $scope.removeItem = function(index) {
@@ -21,12 +19,7 @@
 
             });
             });
-            <!--type:'Object',-->
-            <!--value:$scope.listUsers,-->
-            <!--valueInfo: {-->
-            <!--serializationDataFormat: 'application/json',-->
-            <!--objectTypeName: 'org.camunda.bpm.Elerning.model.ListUsers'-->
-            <!--}-->
+
 
 
         </script>
@@ -44,7 +37,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="i in listUsers.userList">
+            <tr ng-repeat="i in listUsers">
                 <td><input cam-variable-name="i.firstName"
                            cam-variable-type="String"
                            type="text" ng-model="i.firstName"/></td>
