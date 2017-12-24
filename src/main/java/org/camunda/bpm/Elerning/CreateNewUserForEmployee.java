@@ -1,6 +1,7 @@
 package org.camunda.bpm.Elerning;
 
 import org.camunda.bpm.engine.IdentityService;
+import org.camunda.bpm.engine.authorization.Authorization;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.identity.User;
@@ -10,22 +11,33 @@ import org.camunda.bpm.engine.variable.value.TypedValue;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.camunda.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
+import static org.camunda.bpm.engine.authorization.Permissions.ACCESS;
+import static org.camunda.bpm.engine.authorization.Resources.APPLICATION;
 import static org.camunda.bpm.engine.variable.Variables.objectValue;
 
-public class SelectedUserFromDatabaseService implements JavaDelegate {
-    private final static Logger LOGGER = Logger.getLogger("SelectedUserFromDatabaseService");
+public class CreateNewUserForEmployee implements JavaDelegate {
+    private final static Logger LOGGER = Logger.getLogger("CreateNewUserForEmployee");
     private final static String NEW_PASSWORD = "testtest";
 
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        IdentityService userService = delegateExecution.getProcessEngineServices().getIdentityService();
-        List<User> userList = delegateExecution.getProcessEngineServices()
-                .getIdentityService()
-                .createUserQuery()
-                .memberOfGroup("IT").list();
-        List<String> users = new ArrayList<String>();
-        for (User user : userList) {
-            users.add(user.getFirstName());
-        }
+        IdentityService identityService = delegateExecution.getProcessEngineServices().getIdentityService();
+
+//User for database member group IP
+        //        List<User> userList = delegateExecution.getProcessEngineServices()
+//                .getIdentityService()
+//                .createUserQuery()
+//                .memberOfGroup("IT").list();
+//        List<String> users = new ArrayList<String>();
+//        for (User user : userList) {
+//            users.add(user.getFirstName());
+//        }
+
+        //todo dodelat IT pracovnika
+        LOGGER.info("////////////////////////");
+        LOGGER.info("All variables");
+        LOGGER.info(delegateExecution.getVariables().toString());
+        LOGGER.info("////////////////////////");
         Object test = delegateExecution.getVariable("listUsers");
         LOGGER.info("promenna uzivatelu : " + delegateExecution.getVariable("listUsers"));
 
@@ -51,22 +63,42 @@ public class SelectedUserFromDatabaseService implements JavaDelegate {
             }
             data.add(map);
         }
-        //create new user to database
-        for (int i = 0; i < data.size(); i++) {
-            LOGGER.info("*********");
-            LOGGER.info("firstName=" + data.get(i).get("firstName"));
-            LOGGER.info("lastName=" + data.get(i).get("lastName"));
-            LOGGER.info("email=" + data.get(i).get("email"));
-            User user = userService.newUser(createNewUserName(data.get(i).get("firstName"), data.get(i).get("lastName")));
-            user.setFirstName(data.get(i).get("firstName"));
-            user.setLastName(data.get(i).get("lastName"));
-            user.setEmail(data.get(i).get("email"));
-            // static password for all created users
-            user.setPassword("testtest");
-            LOGGER.info(user.toString());
-            userService.saveUser(user);
-        }
 
+//        Authorization salesTasklistAuth = delegateExecution.getProcessEngineServices()
+//                .getAuthorizationService().createNewAuthorization(AUTH_TYPE_GRANT);
+//        salesTasklistAuth.setGroupId("Employee");
+//        salesTasklistAuth.addPermission(ACCESS);
+//        salesTasklistAuth.setResourceId("tasklist");
+//        salesTasklistAuth.setResource(APPLICATION);
+//        delegateExecution.getProcessEngineServices().getAuthorizationService()
+//                .saveAuthorization(salesTasklistAuth);
+
+        //create new user to database
+        List<User> userList = new ArrayList<>();
+        for (Map<String, String> aData : data) {
+            LOGGER.info("*********");
+            LOGGER.info("firstName=" + aData.get("firstName"));
+            LOGGER.info("lastName=" + aData.get("lastName"));
+            LOGGER.info("email=" + aData.get("email"));
+
+            String userName = createNewUserName(aData.get("firstName"), aData.get("lastName"));
+            User user = identityService.newUser(userName);
+            user.setFirstName(aData.get("firstName"));
+            user.setLastName(aData.get("lastName"));
+            user.setEmail(aData.get("email"));
+            // static password for all created users
+            user.setPassword(NEW_PASSWORD);
+
+            LOGGER.info(user.toString());
+
+            identityService.saveUser(user);
+            userList.add(user);
+            identityService.createMembership(userName, "Employee");
+        }
+        List<String> users = new ArrayList<>();
+        for (User user : userList) {
+            users.add(user.getFirstName());
+        }
 
         LOGGER.info(customer.getValue().toString());
         LOGGER.info("Type is: " + customer.getType().getName());
@@ -74,7 +106,7 @@ public class SelectedUserFromDatabaseService implements JavaDelegate {
 
         delegateExecution.setVariable("listUsersRaw", userList);
         delegateExecution.setVariable("sizeListUserRaw", userList.size());
-//     serialization variables
+        //     serialization variables
         delegateExecution.setVariable("names", Variables.objectValue(users.toArray())
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
         delegateExecution.setVariable("listUserJson", objectValue(userList)
