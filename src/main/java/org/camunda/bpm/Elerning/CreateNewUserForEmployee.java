@@ -1,5 +1,6 @@
 package org.camunda.bpm.Elerning;
 
+import org.camunda.bpm.Elerning.Model.Employee;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.authorization.Authorization;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -8,12 +9,12 @@ import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static org.camunda.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
-import static org.camunda.bpm.engine.authorization.Permissions.ACCESS;
-import static org.camunda.bpm.engine.authorization.Resources.APPLICATION;
 import static org.camunda.bpm.engine.variable.Variables.objectValue;
 
 public class CreateNewUserForEmployee implements JavaDelegate {
@@ -21,6 +22,8 @@ public class CreateNewUserForEmployee implements JavaDelegate {
     private final static String NEW_PASSWORD = "testtest";
 
     public void execute(DelegateExecution delegateExecution) throws Exception {
+        EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
+        EntityManager em = ef.createEntityManager();
         IdentityService identityService = delegateExecution.getProcessEngineServices().getIdentityService();
 
 //User for database member group IP
@@ -38,40 +41,12 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         LOGGER.info("All variables");
         LOGGER.info(delegateExecution.getVariables().toString());
         LOGGER.info("////////////////////////");
-        Object test = delegateExecution.getVariable("listUsers");
         LOGGER.info("promenna uzivatelu : " + delegateExecution.getVariable("listUsers"));
-
         LOGGER.info("TEST :: ");
+
+        Object test = delegateExecution.getVariable("listUsers");
         TypedValue customer = delegateExecution.getVariableTyped("listUsers");
-        String[] userStrings = customer.getValue().toString()
-                .substring(1, customer.getValue().toString().length() - 1).split("},\\{");
-        List<Map<String, String>> data = new ArrayList<>(userStrings.length);
-
-        for (String userString : userStrings) {
-            //[{"firstName":"dsad","lastName":"awf","email":"","group":"aefea","$$hashKey":"07S"
-            String[] pairs = userString.substring(1).split("\",\"");
-            HashMap<String, String> map = new HashMap<>();
-            for (String pair : pairs) {
-                String[] keyValue = pair.split("\":\"");
-                if (keyValue[0].startsWith("\"")) {
-                    keyValue[0] = keyValue[0].substring(1);
-                }
-                if (keyValue.length == 2 && keyValue[1].endsWith("\"")) {
-                    keyValue[1] = keyValue[1].substring(0, keyValue[1].length() - 1);
-                }
-                map.put(keyValue[0], keyValue.length == 2 ? keyValue[1] : "");
-            }
-            data.add(map);
-        }
-
-//        Authorization salesTasklistAuth = delegateExecution.getProcessEngineServices()
-//                .getAuthorizationService().createNewAuthorization(AUTH_TYPE_GRANT);
-//        salesTasklistAuth.setGroupId("Employee");
-//        salesTasklistAuth.addPermission(ACCESS);
-//        salesTasklistAuth.setResourceId("tasklist");
-//        salesTasklistAuth.setResource(APPLICATION);
-//        delegateExecution.getProcessEngineServices().getAuthorizationService()
-//                .saveAuthorization(salesTasklistAuth);
+        List<Map<String, String>> data = PavelMagicParser(delegateExecution,customer);
 
         //create new user to database
         List<User> userList = new ArrayList<>();
@@ -80,6 +55,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             LOGGER.info("firstName=" + aData.get("firstName"));
             LOGGER.info("lastName=" + aData.get("lastName"));
             LOGGER.info("email=" + aData.get("email"));
+            LOGGER.info("department" + aData.get("department"));
 
             String userName = createNewUserName(aData.get("firstName"), aData.get("lastName"));
             User user = identityService.newUser(userName);
@@ -88,6 +64,20 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             user.setEmail(aData.get("email"));
             // static password for all created users
             user.setPassword(NEW_PASSWORD);
+
+            //First persist to database
+            em.getTransaction().begin();
+
+            Employee employee = new Employee();
+            employee.setId(0);
+            employee.setUserName(userName);
+            employee.setDepartment("test");
+
+            em.persist(employee);
+            em.getTransaction().commit();
+
+            em.close();
+            ef.close();
 
             LOGGER.info(user.toString());
 
@@ -126,5 +116,29 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         stringBuilder.append(lName.substring(0, 3));
         stringBuilder.append(fName.substring(0, 3));
         return stringBuilder.toString();
+    }
+    private List<Map<String, String>> PavelMagicParser(DelegateExecution delegateExecution,TypedValue customer){
+
+        String[] userStrings = customer.getValue().toString()
+                .substring(1, customer.getValue().toString().length() - 1).split("},\\{");
+        List<Map<String, String>> data = new ArrayList<>(userStrings.length);
+
+        for (String userString : userStrings) {
+            //[{"firstName":"dsad","lastName":"awf","email":"","group":"aefea","$$hashKey":"07S"
+            String[] pairs = userString.substring(1).split("\",\"");
+            HashMap<String, String> map = new HashMap<>();
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("\":\"");
+                if (keyValue[0].startsWith("\"")) {
+                    keyValue[0] = keyValue[0].substring(1);
+                }
+                if (keyValue.length == 2 && keyValue[1].endsWith("\"")) {
+                    keyValue[1] = keyValue[1].substring(0, keyValue[1].length() - 1);
+                }
+                map.put(keyValue[0], keyValue.length == 2 ? keyValue[1] : "");
+            }
+            data.add(map);
+        }
+        return data;
     }
 }

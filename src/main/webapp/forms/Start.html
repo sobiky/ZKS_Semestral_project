@@ -5,7 +5,7 @@
             var ITWorker = {firstName:'', lastName: '',email: '',group:'IT'};
 
             $scope.addItem = function() {
-            $scope.listUsers.push({firstName:'', lastName: '',email: '',group:''});
+            $scope.listUsers.push({firstName:'', lastName: '',email: '',department:''});
             };
 
             $scope.removeItem = function(index) {
@@ -74,9 +74,9 @@
                     <td><input cam-variable-name="i.email"
                                cam-variable-type="String"
                                type="email" ng-model="i.email"/></td>
-                    <td><input cam-variable-name="i.group"
+                    <td><input cam-variable-name="i.department"
                                cam-variable-type="String"
-                               type="text" ng-model="i.group"/></td>
+                               type="text" ng-model="i.department"/></td>
                     <td>
                         <button class="btn btn-default" ng-click="removeItem($index)">
                             <span class="glyphicon glyphicon-minus"></span>

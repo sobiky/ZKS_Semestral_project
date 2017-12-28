@@ -14,7 +14,8 @@
         <!-- for SNAPSHOT versions ${camunda.version} and ${camunda-webapp-ee.version} will be the same, for released versions, the latter must be with -ee suffix -->
         <camunda.version>7.7.0</camunda.version>
         <!-- <camunda-webapp-ee.version>${camunda.version}</camunda-webapp-ee.version> -->           <!-- for SNAPSHOT versions -->
-        <camunda-webapp-ee.version>${camunda.version}-ee</camunda-webapp-ee.version>              <!-- for released versions -->
+        <camunda-webapp-ee.version>${camunda.version}-ee
+        </camunda-webapp-ee.version>              <!-- for released versions -->
 
         <version.java>1.8</version.java>
         <java.version>${version.java}</java.version>
@@ -48,16 +49,29 @@
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.camunda.bpm.extension.springboot</groupId>-->
-            <!--<artifactId>camunda-bpm-spring-boot-starter</artifactId>-->
-            <!--<version>2.1.0</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine-cdi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.1.4.jre7</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -78,12 +92,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>
