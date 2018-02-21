@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<form name="DefineAllInformationSystem">
+    <div class="form-group">
+        <script cam-script type="text/form-script">
+            var listUsers = $scope.listInformationSystem=[];
 
-</body>
-</html>
+            $scope.addItem = function() {
+            $scope.listInformationSystem.push({name:'', url: '',description: '',
+            adminName:'',adminEmail:'',adminTel:''
+            });
+            };
+
+            $scope.removeItem = function(index) {
+            $scope.listUsers.userList.splice(index, 1);
+            };
+            camForm.on('form-loaded', function() {
+            camForm.variableManager.createVariable({
+            name :'listInformationSystem',
+            type:'json',
+            value:$scope.listInformationSystem
+            });
+            });
+
+        </script>
+        <div>
+            <div ng-repeat="i in listInformationSystem">
+                <H3>Informacni system</H3>
+                <label>Nazev</label>
+                <input cam-variable-name="i.name"
+                       cam-variable-type="String"
+                       type="text" ng-model="i.name"/><br>
+                <label>Url</label>
+                <input cam-variable-name="i.url"
+                       cam-variable-type="String"
+                       type="text" ng-model="i.url"/><br>
+                <label>Popis</label>
+                <input cam-variable-name="i.description"
+                       cam-variable-type="String"
+                       type="text" ng-model="i.description"/><br>
+                <H3>Spravce</H3>
+                <label>Jmeno </label>
+                <input cam-variable-name="i.adminName"
+                cam-variable-type="String"
+                type="text" ng-model="i.adminName"/><br>
+                <label>Email </label>
+                <input cam-variable-name="i.adminEmail"
+                       cam-variable-type="String"
+                       type="text" ng-model="i.adminEmail"/><br>
+                <label>Telefon </label>
+                <input cam-variable-name="i.adminTel"
+                       cam-variable-type="String"
+                       type="text" ng-model="i.adminTel"/><br>
+            </div>
+            <button class="btn btn-default" ng-click="addItem()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    </div>
+</form>
