@@ -104,6 +104,8 @@ public class CreateNewUserForEmployee implements JavaDelegate {
     }
 
     // funcion for generated user name
+    //todo udelat lepe generovani  username pocitat s tim,
+    //todo ze je mozne m9t vice lidi s stejnym username a treba pridat cislovani
     private String createNewUserName(String fName, String lName) {
         StringBuilder stringBuilder = new StringBuilder();
         if (fName.length() <= 3 || lName.length() <= 3) {
