@@ -6,6 +6,7 @@ import org.camunda.bpm.engine.authorization.Authorization;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.identity.User;
+import org.camunda.bpm.engine.identity.UserQuery;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 
@@ -46,7 +47,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
 
         Object test = delegateExecution.getVariable("listUsers");
         TypedValue customer = delegateExecution.getVariableTyped("listUsers");
-        List<Map<String, String>> data = PavelMagicParser(delegateExecution,customer);
+        List<Map<String, String>> data = PavelMagicParser(delegateExecution, customer);
 
         //create new user to database
         List<User> userList = new ArrayList<>();
@@ -57,7 +58,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             LOGGER.info("email=" + aData.get("email"));
             LOGGER.info("department" + aData.get("department"));
 
-            String userName = createNewUserName(aData.get("firstName"), aData.get("lastName"));
+            String userName = createNewUserName(aData.get("firstName"), aData.get("lastName"), delegateExecution);
             User user = identityService.newUser(userName);
             user.setFirstName(aData.get("firstName"));
             user.setLastName(aData.get("lastName"));
@@ -76,8 +77,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             em.persist(employee);
             em.getTransaction().commit();
 
-            em.close();
-            ef.close();
+
 
             LOGGER.info(user.toString());
 
@@ -85,6 +85,8 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             userList.add(user);
             identityService.createMembership(userName, "Employee");
         }
+        em.close();
+        ef.close();
         List<String> users = new ArrayList<>();
         for (User user : userList) {
             users.add(user.getFirstName());
@@ -104,9 +106,8 @@ public class CreateNewUserForEmployee implements JavaDelegate {
     }
 
     // funcion for generated user name
-    //todo udelat lepe generovani  username pocitat s tim,
-    //todo ze je mozne m9t vice lidi s stejnym username a treba pridat cislovani
-    private String createNewUserName(String fName, String lName) {
+    private String createNewUserName(String fName, String lName, DelegateExecution delegateExecution) {
+
         StringBuilder stringBuilder = new StringBuilder();
         if (fName.length() <= 3 || lName.length() <= 3) {
             if (lName.length() <= 3) {
@@ -117,9 +118,27 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         }
         stringBuilder.append(lName.substring(0, 3));
         stringBuilder.append(fName.substring(0, 3));
-        return stringBuilder.toString();
+        LOGGER.info("odtaz do databaze");
+        UserQuery user = delegateExecution.getProcessEngineServices().getIdentityService()
+                .createUserQuery().userId(stringBuilder.toString());
+        LOGGER.info("zacatek testu duplicity");
+        if (user != null) {
+            LOGGER.info("nasle se buplicita");
+            int random = (int )(Math.random() * 50 + 1);
+            StringBuilder tempUser = stringBuilder.append(String.valueOf(random));
+            LOGGER.info("dalsi heslo >>>>>  "+tempUser.toString());
+            while (delegateExecution.getProcessEngineServices().getIdentityService()
+                    .createUserQuery().userId(tempUser.toString()) == null) {
+                LOGGER.info("opakovane zkouseni");
+
+                random = (int )(Math.random() * 50 + 1);
+                tempUser = stringBuilder.append(String.valueOf(random));
+            }
+            return tempUser.toString();
+        } else return stringBuilder.toString();
     }
-    private List<Map<String, String>> PavelMagicParser(DelegateExecution delegateExecution,TypedValue customer){
+
+    private List<Map<String, String>> PavelMagicParser(DelegateExecution delegateExecution, TypedValue customer) {
 
         String[] userStrings = customer.getValue().toString()
                 .substring(1, customer.getValue().toString().length() - 1).split("},\\{");
