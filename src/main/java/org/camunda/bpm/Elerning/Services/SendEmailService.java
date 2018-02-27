@@ -21,7 +21,7 @@ public class SendEmailService implements JavaDelegate {
         initAllProperties(properties);
 
 
-        Properties props = setEmailProperties();
+        Properties props = getEmailProperties();
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
@@ -52,7 +52,7 @@ public class SendEmailService implements JavaDelegate {
         properties.load(file);
     }
 
-    private Properties setEmailProperties() {
+    private Properties getEmailProperties() {
         Properties props = new Properties();
         LOGGER.info("mail.smtp.auth > " + properties.getProperty("mail.smtp.auth"));
         props.put("mail.smtp.auth", properties.getProperty("mail.smtp.auth"));
