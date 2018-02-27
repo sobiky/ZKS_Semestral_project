@@ -2,23 +2,33 @@
     <div class="form-group">
         <label>IT Smernice</label> <input type="radio" ng-model="file0" name="file0" value="yes"> Ano
         <input type="radio" ng-model="file0" name="file0" value="no"> Ne
-        <div ng-show="file0=='yes'"><input type="file"/></div>
+        <div ng-show="file0=='yes'"><input type="file" cam-variable-name="IT_Gudeline"
+                                           cam-variable-type="File"
+                                           cam-max-filesize="10000000"/></div>
         <br>
         <label>Plan Zalohovani</label> <input type="radio" ng-model="file1" name="file1" value="yes"> Ano
         <input type="radio" ng-model="file1" name="file1" value="no"> Ne
-        <div ng-show="file1=='yes'"><input type="file"/></div>
+        <div ng-show="file1=='yes'"><input type="file" cam-variable-name="Play_backup"
+                                           cam-variable-type="File"
+                                           cam-max-filesize="10000000"/></div>
         <br>
         <label>Plan Opravy</label> <input type="radio" ng-model="file2" name="file2" value="yes"> Ano
         <input type="radio" ng-model="file2" name="file2" value="no"> Ne
-        <div ng-show="file2=='yes'"><input type="file"/></div>
+        <div ng-show="file2=='yes'"><input type="file" cam-variable-name="Plan_Repair"
+                                           cam-variable-type="File"
+                                           cam-max-filesize="10000000"/></div>
         <br>
         <label>Plan Skartace</label> <input type="radio" ng-model="file3" name="file3" value="yes"> Ano
         <input type="radio" ng-model="file3" name="file3" value="no"> Ne
-        <div ng-show="file3=='yes'"><input type="file"/></div>
+        <div ng-show="file3=='yes'"><input type="file" cam-variable-name="Plan_Shred"
+                                           cam-variable-type="File"
+                                           cam-max-filesize="10000000"/></div>
         <br>
         <label>Plan Archivace</label> <input type="radio" ng-model="file4" name="file4" value="yes"> Ano
         <input type="radio" ng-model="file4" name="file4" value="no"> Ne
-        <div ng-show="file4=='yes'"><input type="file"/></div>
+        <div ng-show="file4=='yes'"><input type="file" cam-variable-name="Plan_Archive"
+                                           cam-variable-type="File"
+                                           cam-max-filesize="10000000"/></div>
         <br>
     </div>
 </form>

@@ -24,6 +24,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
     private final static String NEW_PASSWORD = "testtest";
 
     public void execute(DelegateExecution delegateExecution) throws Exception {
+        //todo do budoucna treba vytvorit pokud neexistuje skupinu Employee a pridat ji prava potrebna
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         IdentityService identityService = delegateExecution.getProcessEngineServices().getIdentityService();
@@ -178,5 +179,9 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             data.add(map);
         }
         return data;
+    }
+    //todo dodelat funkci pro generovani hesla
+    private String generatedPassword(){
+        return "";
     }
 }
