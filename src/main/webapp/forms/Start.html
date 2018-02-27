@@ -9,7 +9,7 @@
             };
 
             $scope.removeItem = function(index) {
-            $scope.listUsers.userList.splice(index, 1);
+            $scope.listUsers.splice(index, 1);
             };
             camForm.on('form-loaded', function() {
             camForm.variableManager.createVariable({
@@ -22,11 +22,12 @@
 
 
 
+
         </script>
 
         <div>Nazev spolecnosti: <input cam-variable-name="tenant"
                                        cam-variable-type="String"
-                                       type="text"></div>
+                                       type="text" required></div>
         <div>IT pracovnik</div>
         <table class="table">
             <thead>
@@ -37,16 +38,16 @@
             </tr>
             </thead>
             <tr>
-                <td><input cam-variable-name="ITWorker.firstName"
+                <td><input cam-variable-name="ITWorkerFirstName"
                            cam-variable-type="String"
-                           type="text" ng-model="ITWorker.firstName"/></td>
-                <td><input cam-variable-name="ITWorker.lastName"
+                           type="text" ng-model="ITWorkerFirstName" required/></td>
+                <td><input cam-variable-name="ITWorkerLastName"
                            cam-variable-type="String"
-                           type="text" ng-model="ITWorker.lastName"/></td>
+                           type="text" ng-model="ITWorkerLastName" required/></td>
                 <!--dobelat validaci pro email-->
-                <td><input cam-variable-name="ITWorker.email"
+                <td><input cam-variable-name="ITWorkerEmail"
                            cam-variable-type="String"
-                           type="email" ng-model="ITWorker.email"/></td>
+                           type="email" ng-model="ITWorkerEmail" required/></td>
             </tr>
             <tbody>
 

@@ -20,6 +20,8 @@
             });
             });
 
+
+
         </script>
         <div>
             <div ng-repeat="i in listInformationSystem">
@@ -35,12 +37,14 @@
                 <label>Popis</label>
                 <input cam-variable-name="i.description"
                        cam-variable-type="String"
-                       type="text" ng-model="i.description"/><br>
+                       type="text" ng-model="i.description"/>
+                    <span class="glyphicon glyphicon-question-sign"></span>
+                <br>
                 <H3>Spravce</H3>
                 <label>Jmeno </label>
                 <input cam-variable-name="i.adminName"
-                cam-variable-type="String"
-                type="text" ng-model="i.adminName"/><br>
+                       cam-variable-type="String"
+                       type="text" ng-model="i.adminName"/><br>
                 <label>Email </label>
                 <input cam-variable-name="i.adminEmail"
                        cam-variable-type="String"

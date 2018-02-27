@@ -5,6 +5,7 @@ import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.authorization.Authorization;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.identity.Tenant;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.identity.UserQuery;
 import org.camunda.bpm.engine.variable.Variables;
@@ -37,7 +38,6 @@ public class CreateNewUserForEmployee implements JavaDelegate {
 //            users.add(user.getFirstName());
 //        }
 
-        //todo dodelat IT pracovnika
         LOGGER.info("////////////////////////");
         LOGGER.info("All variables");
         LOGGER.info(delegateExecution.getVariables().toString());
@@ -48,6 +48,11 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         Object test = delegateExecution.getVariable("listUsers");
         TypedValue customer = delegateExecution.getVariableTyped("listUsers");
         List<Map<String, String>> data = PavelMagicParser(delegateExecution, customer);
+
+        //create new tenant
+        //todo treba osetrit vstup mezery a mozna duplicita
+        Tenant tenant = identityService.newTenant(delegateExecution.getVariable("tenant").toString());
+        identityService.saveTenant(tenant);
 
         //create new user to database
         List<User> userList = new ArrayList<>();
@@ -78,16 +83,28 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             em.getTransaction().commit();
 
 
-
             LOGGER.info(user.toString());
 
             identityService.saveUser(user);
             userList.add(user);
             identityService.createMembership(userName, "Employee");
+            LOGGER.info("TENANT= " + delegateExecution.getVariable("tenant"));
+            identityService.createTenantUserMembership(delegateExecution.getVariable("tenant").toString(), userName);
         }
         em.close();
         ef.close();
         List<String> users = new ArrayList<>();
+
+        //insert IT Employee
+        User it = identityService.newUser(createNewUserName(delegateExecution.getVariable("ITWorkerLastName").toString()
+                , delegateExecution.getVariable("ITWorkerFirstName").toString(), delegateExecution));
+        it.setEmail(delegateExecution.getVariable("ITWorkerEmail").toString());
+        it.setFirstName(delegateExecution.getVariable("ITWorkerFirstName").toString());
+        it.setLastName(delegateExecution.getVariable("ITWorkerLastName").toString());
+        it.setPassword(NEW_PASSWORD);
+        identityService.saveUser(it);
+        userList.add(it);
+
         for (User user : userList) {
             users.add(user.getFirstName());
         }
@@ -122,16 +139,16 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         UserQuery user = delegateExecution.getProcessEngineServices().getIdentityService()
                 .createUserQuery().userId(stringBuilder.toString());
         LOGGER.info("zacatek testu duplicity");
-        if (user != null) {
+        if (user.singleResult() != null) {
             LOGGER.info("nasle se buplicita");
-            int random = (int )(Math.random() * 50 + 1);
+            int random = (int) (Math.random() * 50 + 1);
             StringBuilder tempUser = stringBuilder.append(String.valueOf(random));
-            LOGGER.info("dalsi heslo >>>>>  "+tempUser.toString());
+            LOGGER.info("dalsi heslo >>>>>  " + tempUser.toString());
             while (delegateExecution.getProcessEngineServices().getIdentityService()
                     .createUserQuery().userId(tempUser.toString()) == null) {
                 LOGGER.info("opakovane zkouseni");
 
-                random = (int )(Math.random() * 50 + 1);
+                random = (int) (Math.random() * 50 + 1);
                 tempUser = stringBuilder.append(String.valueOf(random));
             }
             return tempUser.toString();
