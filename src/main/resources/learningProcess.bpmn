@@ -22,13 +22,14 @@
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_1du9shf</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SelectedUser</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_1bf1k69</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_0tyf22a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_1bf1k69</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_0e6i4fe" name="IT worker">
         <bpmn:flowNodeRef>Task_1lw7a24</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_0ocq5z2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_1m6kep6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_04jdnbb</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="StartEvent_1" name="Start&#10;&#10;" camunda:formKey="embedded:app:forms/Start.html" camunda:initiator="requestor">
@@ -94,7 +95,7 @@
       <bpmn:outgoing>SequenceFlow_0pnsb5z</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_0pnsb5z" sourceRef="Task_1lw7a24" targetRef="Task_0ocq5z2" />
-    <bpmn:sequenceFlow id="SequenceFlow_0xzztqm" sourceRef="Task_0ocq5z2" targetRef="Task_1m6kep6" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xzztqm" sourceRef="Task_0ocq5z2" targetRef="Task_04jdnbb" />
     <bpmn:userTask id="Task_0ocq5z2" name="Form Data Inf. system" camunda:formKey="embedded:app:forms/FormDataInfSystem.html" camunda:assignee="admin">
       <bpmn:incoming>SequenceFlow_0pnsb5z</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0xzztqm</bpmn:outgoing>
@@ -157,16 +158,21 @@
     <bpmn:sequenceFlow id="SequenceFlow_02km32f" sourceRef="Task_14q8tcs" targetRef="EndEvent_1t45jhj" />
     <bpmn:sequenceFlow id="SequenceFlow_18cnavr" sourceRef="Task_1qq0vqi" targetRef="EndEvent_1t45jhj" />
     <bpmn:sequenceFlow id="SequenceFlow_158ij6r" sourceRef="StartEvent_1" targetRef="Task_1lw7a24" />
-    <bpmn:serviceTask id="Task_1bf1k69" name="test email send" camunda:class="org.camunda.bpm.Elerning.Services.SendEmailService" />
     <bpmn:sequenceFlow id="SequenceFlow_1y4cd1s" sourceRef="SelectedUser" targetRef="EndEvent_0tyf22a" />
     <bpmn:endEvent id="EndEvent_0tyf22a">
       <bpmn:incoming>SequenceFlow_1y4cd1s</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_15jwm6z" sourceRef="Task_1m6kep6" targetRef="EndEvent_1t45jhj" />
     <bpmn:userTask id="Task_1m6kep6" name="view Document" camunda:formKey="embedded:app:forms/ViewDocument.html" camunda:assignee="admin">
-      <bpmn:incoming>SequenceFlow_0xzztqm</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0pn0hj6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_15jwm6z</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_15jwm6z" sourceRef="Task_1m6kep6" targetRef="EndEvent_1t45jhj" />
+    <bpmn:serviceTask id="Task_04jdnbb" name="Documents Service" camunda:class="org.camunda.bpm.Elerning.Services.DocumentsService">
+      <bpmn:incoming>SequenceFlow_0xzztqm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pn0hj6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_1bf1k69" name="test email send" camunda:class="org.camunda.bpm.Elerning.Services.SendEmailService" />
+    <bpmn:sequenceFlow id="SequenceFlow_0pn0hj6" sourceRef="Task_04jdnbb" targetRef="Task_1m6kep6" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ElearningProcess">
@@ -335,11 +341,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0xzztqm_di" bpmnElement="SequenceFlow_0xzztqm">
         <di:waypoint xsi:type="dc:Point" x="1050" y="686" />
-        <di:waypoint xsi:type="dc:Point" x="1075" y="686" />
-        <di:waypoint xsi:type="dc:Point" x="1075" y="466" />
-        <di:waypoint xsi:type="dc:Point" x="1112" y="686" />
+        <di:waypoint xsi:type="dc:Point" x="1133" y="686" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1045" y="570" width="90" height="12" />
+          <dc:Bounds x="1046.5" y="665" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_0d3sq5m_di" bpmnElement="Task_0ocq5z2">
@@ -440,7 +444,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0mvudna_di" bpmnElement="Task_1bf1k69">
-        <dc:Bounds x="406" y="169" width="100" height="80" />
+        <dc:Bounds x="412" y="166" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1y4cd1s_di" bpmnElement="SequenceFlow_1y4cd1s">
         <di:waypoint xsi:type="dc:Point" x="329" y="249" />
@@ -452,14 +456,24 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_171ordk_di" bpmnElement="Task_1m6kep6">
-        <dc:Bounds x="1113" y="646" width="100" height="80" />
+        <dc:Bounds x="1319" y="646" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_15jwm6z_di" bpmnElement="SequenceFlow_15jwm6z">
-        <di:waypoint xsi:type="dc:Point" x="1213" y="686" />
+        <di:waypoint xsi:type="dc:Point" x="1419" y="686" />
         <di:waypoint xsi:type="dc:Point" x="1576" y="686" />
         <di:waypoint xsi:type="dc:Point" x="1576" y="440" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1394.5" y="665" width="0" height="12" />
+          <dc:Bounds x="1497.5" y="665" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0jh09ie_di" bpmnElement="Task_04jdnbb">
+        <dc:Bounds x="1133" y="646" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0pn0hj6_di" bpmnElement="SequenceFlow_0pn0hj6">
+        <di:waypoint xsi:type="dc:Point" x="1233" y="686" />
+        <di:waypoint xsi:type="dc:Point" x="1319" y="686" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1276" y="665" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

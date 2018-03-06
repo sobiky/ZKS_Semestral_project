@@ -1,9 +1,73 @@
 <form name="ViewDocument">
     <div class="form-group">
-        <a cam-file-download="IT_Gudeline"></a>
-        <a cam-file-download="Play_backup"></a>
-        <a cam-file-download="Plan_Repair"></a>
-        <a cam-file-download="Plan_Shred"></a>
-        <a cam-file-download="Plan_Archive"></a>
+        <!--<a cam-file-download="IT_Gudeline"></a>-->
+        <div ng-if="IT_Gudeline">
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/IT_Gudeline/data" download="IT_Gudeline.pdf"
+               role="button">
+                IT_Gudeline
+            </a>
+        <br>
+        </div>
+
+        <div ng-if="Play_backup">
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Play_backup/data" download="Play_backup.pdf"
+               role="button">
+                Play_backup
+            </a>
+        <br>
+        </div>
+
+        <div ng-if="Plan_Repair">
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Repair/data" download="Plan_Repair.pdf"
+               role="button">
+                Plan_Repair
+            </a>
+        <br>
+        </div>
+
+        <div ng-if="Plan_Shred">
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Shred/data" download="Plan_Shred.pdf"
+               role="button">
+                Plan_Shred
+            </a>
+        <br>
+        </div>
+
+        <div ng-if="Plan_Archive">
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Archive/data" download="Plan_Archive.pdf"
+               role="button">
+                Plan_Archive
+            </a>
+        <br>
+        </div>
+
+        <script cam-script type="text/form-script">
+         camForm.on('form-loaded', function() {
+        camForm.variableManager.fetchVariable('IT_Gudeline');
+        camForm.variableManager.fetchVariable('Play_backup');
+        camForm.variableManager.fetchVariable('Plan_Repair');
+        camForm.variableManager.fetchVariable('Plan_Shred');
+        camForm.variableManager.fetchVariable('Plan_Archive');
+         });
+         camForm.on('variables-restored', function() {
+        $scope.IT_Gudeline = camForm.variableManager.variableValue('IT_Gudeline');
+        $scope.Play_backup = camForm.variableManager.variableValue('Play_backup');
+        $scope.Plan_Repair = camForm.variableManager.variableValue('Plan_Repair');
+        $scope.Plan_Shred = camForm.variableManager.variableValue('Plan_Shred');
+        $scope.Plan_Archive = camForm.variableManager.variableValue('Plan_Archive');
+          });
+
+
+
+        </script>
+
+
+        <!--<a href="/engine-rest/task/{{camForm.taskId}}/variables/uploadedFile1/data" role="button">-->
+        <!--Download-->
+        <!--</a>-->
+        <!--<a cam-file-download="Play_backup"></a>-->
+        <!--<a cam-file-download="Plan_Repair"></a>-->
+        <!--<a cam-file-download="Plan_Shred"></a>-->
+        <!--<a cam-file-download="Plan_Archive"></a>-->
     </div>
 </form>

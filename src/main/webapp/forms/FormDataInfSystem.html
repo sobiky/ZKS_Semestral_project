@@ -1,34 +1,134 @@
 <form name="FormDataInfSystem">
     <div class="form-group">
+        <!--<script cam-script type="text/form-script">-->
+        <!--$scope.uploadFile = function(fileName) {-->
+        <!--if (document.getElementById(fileName).files[0] && document.getElementById(fileName).files[0].size > 0) {-->
+        <!--var formData = new FormData();-->
+        <!--formData.append('data', document.getElementById(fileName).files[0]);-->
+        <!--formData.append('valueType', 'File');-->
+        <!--$http.post('/engine-rest/task/' + $scope.camForm.taskId + '/variables/'+ fileName +'/data', formData, {transformRequest: angular.identity, headers: {'Content-Type': undefined}});-->
+        <!--}-->
+        <!--};-->
+        <!--&lt;!&ndash;</script>&ndash;&gt;-->
         <label>IT Smernice</label> <input type="radio" ng-model="file0" name="file0" value="yes"> Ano
         <input type="radio" ng-model="file0" name="file0" value="no"> Ne
-        <div ng-show="file0=='yes'"><input type="file" cam-variable-name="IT_Gudeline"
-                                           cam-variable-type="File"
-                                           cam-max-filesize="10000000"/></div>
+        <div ng-if="file0=='yes'"><input type="file" id="IT_Gudeline"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+
+            <input type="text" style="display: none"
+                   cam-variable-type="String"
+                   cam-variable-name="IT_Gudeline"
+                   name="IT_Gudeline"/>
+            <button ng-click="upload('IT_Gudeline')">Upload</button>
+        </div>
+
         <br>
         <label>Plan Zalohovani</label> <input type="radio" ng-model="file1" name="file1" value="yes"> Ano
         <input type="radio" ng-model="file1" name="file1" value="no"> Ne
-        <div ng-show="file1=='yes'"><input type="file" cam-variable-name="Play_backup"
-                                           cam-variable-type="File"
-                                           cam-max-filesize="10000000"/></div>
+        <div ng-if="file1=='yes'"><input type="file" id="Play_backup"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Play_backup"
+                   name="Play_backup"/>
+            <button ng-click="upload('Play_backup')">Upload</button>
+        </div>
         <br>
         <label>Plan Opravy</label> <input type="radio" ng-model="file2" name="file2" value="yes"> Ano
         <input type="radio" ng-model="file2" name="file2" value="no"> Ne
-        <div ng-show="file2=='yes'"><input type="file" cam-variable-name="Plan_Repair"
-                                           cam-variable-type="File"
-                                           cam-max-filesize="10000000"/></div>
+        <div ng-if="file2=='yes'"><input type="file" id="Plan_Repair"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Repair"
+                   name="Plan_Repair"/>
+            <button ng-click="upload('Plan_Repair')">Upload</button>
+        </div>
         <br>
         <label>Plan Skartace</label> <input type="radio" ng-model="file3" name="file3" value="yes"> Ano
         <input type="radio" ng-model="file3" name="file3" value="no"> Ne
-        <div ng-show="file3=='yes'"><input type="file" cam-variable-name="Plan_Shred"
-                                           cam-variable-type="File"
-                                           cam-max-filesize="10000000"/></div>
+        <div ng-if="file3=='yes'"><input type="file" id="Plan_Shred"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Shred"
+                   name="Plan_Shred"/>
+            <button ng-click="upload('Plan_Shred')">Upload</button>
+        </div>
         <br>
         <label>Plan Archivace</label> <input type="radio" ng-model="file4" name="file4" value="yes"> Ano
         <input type="radio" ng-model="file4" name="file4" value="no"> Ne
-        <div ng-show="file4=='yes'"><input type="file" cam-variable-name="Plan_Archive"
-                                           cam-variable-type="File"
-                                           cam-max-filesize="10000000"/></div>
+        <div ng-if="file4=='yes'"><input type="file" id="Plan_Archive"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Archive"
+                   name="Plan_Archive"/>
+            <button ng-click="upload('Plan_Archive')">Upload</button>
+        </div>
         <br>
+
+
+        <!--<input id="fileUpload"-->
+        <!--type="file"-->
+        <!--cam-max-filesize="10000000">-->
+        <!--<button ng-click="upload()">Upload</button>-->
+
+        <script cam-script type="text/form-script">
+    inject(['$http', 'Uri', function($http, Uri) {
+      camForm.on('form-loaded', function() {
+        $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function(result){
+
+
+          $scope.upload = function(nameId) {
+            $scope.inputName = document.getElementById(nameId).files[0].name+"";
+            document.getElementsByName(nameId)[0].value = $scope.inputName;
+            var formData = new FormData();
+            formData.append('data', document.getElementById(nameId).files[0]);
+            $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/'+ nameId +'/data'), formData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            });
+          };
+       });
+      });
+    }]);
+
+
+
+        </script>
+
+
+        <!--</div>-->
+
+        <!--<input id="fileUpload1"-->
+        <!--type="file"-->
+        <!--cam-max-filesize="10000000">-->
+        <!--<button ng-click="upload()">Upload</button>-->
+
+        <!--<script cam-script type="text/form-script">-->
+        <!--inject(['$http', 'Uri', function($http, Uri) {-->
+        <!--camForm.on('form-loaded', function() {-->
+        <!--$http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function(result){-->
+        <!--$scope.upload = function() {-->
+        <!--var formData = new FormData();-->
+        <!--formData.append('data', document.getElementById('fileUpload1').files[0]);-->
+        <!--$http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/uploadedFile1/data'), formData, {-->
+        <!--transformRequest: angular.identity,-->
+        <!--headers: {'Content-Type': undefined}-->
+        <!--});-->
+        <!--};-->
+        <!--});-->
+        <!--});-->
+        <!--}]);-->
+
+        <!--</script>-->
+
+
     </div>
 </form>
