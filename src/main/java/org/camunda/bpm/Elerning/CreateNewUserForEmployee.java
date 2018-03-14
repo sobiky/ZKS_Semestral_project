@@ -48,10 +48,10 @@ public class CreateNewUserForEmployee implements JavaDelegate {
 
         Object test = delegateExecution.getVariable("listUsers");
         TypedValue customer = delegateExecution.getVariableTyped("listUsers");
-        List<Map<String, String>> data = PavelMagicParser(delegateExecution, customer);
+        List<Map<String, String>> data = PavelMagicParser(customer);
 
         //create new tenant
-        //todo treba osetrit vstup mezery a mozna duplicita
+        //todo treba osetrit vstup mezery a mozna duplicita, Pridat aby se to ukladalo k nazvu firmy
         Tenant tenant = identityService.newTenant(delegateExecution.getVariable("tenant").toString());
         identityService.saveTenant(tenant);
 
@@ -76,7 +76,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             em.getTransaction().begin();
 
             Employee employee = new Employee();
-            employee.setId(0);
+            employee.setEmloyeeId(0);
             employee.setUserName(userName);
             employee.setDepartment("test");
 
@@ -156,7 +156,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         } else return stringBuilder.toString();
     }
 
-    private List<Map<String, String>> PavelMagicParser(DelegateExecution delegateExecution, TypedValue customer) {
+    public static List<Map<String, String>> PavelMagicParser( TypedValue customer) {
 
         String[] userStrings = customer.getValue().toString()
                 .substring(1, customer.getValue().toString().length() - 1).split("},\\{");
