@@ -9,27 +9,30 @@ import java.io.Serializable;
 public class Document implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer documentId;
     private String name;
+    private String tenant;//from camunda = tenat
+
     @Lob
     private File binaryFile;
-    private String firm;//from camunda = tenat
 
-    public Document(String name, File binaryFile, String firm) {
+    public Document(String name, String tenant, File binaryFile) {
+        super();
         this.name = name;
+        this.tenant = tenant;
         this.binaryFile = binaryFile;
-        this.firm = firm;
     }
-    public Document(){
+
+    public Document() {
         super();
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getDocumentId() {
+        return documentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setDocumentId(Integer documentId) {
+        this.documentId = documentId;
     }
 
     public String getName() {
@@ -48,11 +51,11 @@ public class Document implements Serializable {
         this.binaryFile = binaryFile;
     }
 
-    public String getFirm() {
-        return firm;
+    public String getTenant() {
+        return tenant;
     }
 
-    public void setFirm(String firm) {
-        this.firm = firm;
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 }
