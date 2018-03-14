@@ -9,25 +9,29 @@ import java.io.Serializable;
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer employee_Id;
     private String department;
     private String userName;
+    private String tenant;
 
 
-    public Employee(String department, String userName) {
-        super( );
+    public Employee(String department, String userName, String tenant) {
+        super();
         this.department = department;
         this.userName = userName;
-    }
-    public Employee( ) {
-        super();
-    }
-    public Integer getId() {
-        return id;
+        this.tenant = tenant;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Employee() {
+        super();
+    }
+
+    public Integer getEmloyeeId() {
+        return employee_Id;
+    }
+
+    public void setEmloyeeId(Integer employee_Id) {
+        this.employee_Id = employee_Id;
     }
 
     public String getDepartment() {
@@ -44,5 +48,13 @@ public class Employee implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 }
