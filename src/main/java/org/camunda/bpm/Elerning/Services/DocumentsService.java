@@ -19,11 +19,11 @@ public class DocumentsService implements JavaDelegate {
         //todo vyresit problem s nahrati souboru najak posilat nazev souboru........
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
-//        LOGGER.info("//////////////////////VARIABLES/////////////////");
-//        LOGGER.info(delegateExecution.getVariables().toString());
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
+        LOGGER.info(delegateExecution.getVariables().toString());
 //        if(delegateExecution.getVariable("IT_Gudeline")!=null){
 //            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
 //        }else LOGGER.info("NULL POINTER");
-//        LOGGER.info("//////////////////////VARIABLES/////////////////");
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
     }
 }

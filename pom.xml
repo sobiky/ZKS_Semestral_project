@@ -71,6 +71,11 @@
             <artifactId>postgresql</artifactId>
             <version>42.1.4.jre7</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.5.RELEASE</version>
+        </dependency>
 
     </dependencies>
     <build>

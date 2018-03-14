@@ -1,0 +1,46 @@
+<form name="ProcessingOfPersonalData">
+    <div class="form-group">
+        <H2>Jaky typ dat mate ???</H2>
+        <label>Elektronicky :</label>
+        <input type="checkbox"
+               cam-variable-name="electronic"
+               cam-variable-type="Boolean" />
+        <label>Papirove :</label>
+        <input type="checkbox"
+               cam-variable-name="papper"
+               cam-variable-type="Boolean" />
+        <label>Elektronicy i papirove :</label>
+        <input type="checkbox"
+               cam-variable-name="bothMethod"
+               cam-variable-type="Boolean" />
+        <!--Elektronic-->
+        <div ng-show="electronic">
+            Elektronicky
+            // sem prijde select box s IT systemy .. //
+            <label>Vlozte sitovy disk :</label>
+            <input type="text"
+                   cam-variable-name="networkDisk"
+                   cam-variable-type="String" />
+        </div>
+        <!---->
+
+        <!--Paper-->
+        <div ng-show="papper">
+            Papirove
+
+            <input type="text"
+                   cam-variable-name="papir"
+                   cam-variable-type="String" />
+        </div>
+        <!---->
+
+        <!--Both Method-->
+        <div ng-show="bothMethod">
+            Oboje methody
+
+            <input type="text"
+                   cam-variable-name="oboje"
+                   cam-variable-type="String" />
+        </div>
+    </div>
+</form>
