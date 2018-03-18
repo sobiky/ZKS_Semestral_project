@@ -1,26 +1,41 @@
 <form name="ProcessingOfPersonalData">
+
+    <script cam-script type="text/form-script">
+     camForm.on('variables-restored', function() {
+        $scope.departmentsList = camForm.variableManager.variableValue('departmentsList');
+    });
+    <!--debugger;-->
+
+    </script>
+
     <div class="form-group">
         <H2>Jaky typ dat mate ???</H2>
         <label>Elektronicky :</label>
         <input type="checkbox"
                cam-variable-name="electronic"
-               cam-variable-type="Boolean" />
+               cam-variable-type="Boolean"/>
         <label>Papirove :</label>
         <input type="checkbox"
                cam-variable-name="papper"
-               cam-variable-type="Boolean" />
+               cam-variable-type="Boolean"/>
         <label>Elektronicy i papirove :</label>
         <input type="checkbox"
                cam-variable-name="bothMethod"
-               cam-variable-type="Boolean" />
+               cam-variable-type="Boolean"/>
         <!--Elektronic-->
         <div ng-show="electronic">
             Elektronicky
-            // sem prijde select box s IT systemy .. //
+            sem prijde select box s IT systemy ..
+            <select
+                    cam-variable-name="departmentItem"
+                    cam-variable-type="String"
+                    cam-choices="departmentsList">
+            </select>
+            <br>
             <label>Vlozte sitovy disk :</label>
             <input type="text"
                    cam-variable-name="networkDisk"
-                   cam-variable-type="String" />
+                   cam-variable-type="String"/>
         </div>
         <!---->
 
@@ -30,7 +45,7 @@
 
             <input type="text"
                    cam-variable-name="papir"
-                   cam-variable-type="String" />
+                   cam-variable-type="String"/>
         </div>
         <!---->
 
@@ -40,7 +55,7 @@
 
             <input type="text"
                    cam-variable-name="oboje"
-                   cam-variable-type="String" />
+                   cam-variable-type="String"/>
         </div>
     </div>
 </form>

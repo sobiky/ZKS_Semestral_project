@@ -90,4 +90,16 @@ public class ITDepartment implements Serializable {
     public void setTenant(String tenant) {
         this.tenant = tenant;
     }
+//todo lepsi vypis by to chtelo tedy
+    @Override
+    public String toString() {
+        return "ITDepartment{" +
+                "ITDepartmentId=" + ITDepartmentId +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", description='" + description + '\'' +
+                ", tenant='" + tenant + '\'' +
+                ", admin=" + admin +
+                '}';
+    }
 }
