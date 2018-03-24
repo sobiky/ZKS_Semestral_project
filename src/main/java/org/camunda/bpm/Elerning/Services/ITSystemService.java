@@ -33,7 +33,11 @@ public class ITSystemService implements JavaDelegate {
             LOGGER.info("----------------------------------");
         }
 
-        delegateExecution.setVariable("departmentsList", Variables.objectValue(department.toArray())
+
+
+        delegateExecution.setVariable("systemsList", Variables.objectValue(department.toArray())
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
+        //todo tady je videt url objektu a data jeho
+        LOGGER.info(String.valueOf(delegateExecution.getVariables()));
     }
 }

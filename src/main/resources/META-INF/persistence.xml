@@ -10,6 +10,8 @@
         <class>org.camunda.bpm.Elerning.Model.Employee</class>
         <class>org.camunda.bpm.Elerning.Model.ITDepartment</class>
         <class>org.camunda.bpm.Elerning.Model.AdministratorITSystem</class>
+        <class>org.camunda.bpm.Elerning.Model.Document</class>
+        <class>org.camunda.bpm.Elerning.Model.Supplier</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/MyData"/>

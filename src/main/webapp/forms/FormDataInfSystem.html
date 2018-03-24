@@ -80,25 +80,64 @@
         <!--<button ng-click="upload()">Upload</button>-->
 
         <script cam-script type="text/form-script">
-    inject(['$http', 'Uri', function($http, Uri) {
-      camForm.on('form-loaded', function() {
-        $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function(result){
+            $scope.camundaDataUrl = [];
+            $scope.dataInputName = [];
+            inject(['$http', 'Uri', function ($http, Uri) {
+                camForm.on('form-loaded', function () {
+                    $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
+                        $scope.upload = function (nameId) {
+                            console.log($scope.camundaDataUrl.length);
+                            var check = false;
+                            for (let i = 0; i < $scope.camundaDataUrl.length; i++) {
+                                <!--console.log($scope.camundaDataUrl[i].url);-->
+                                if ($scope.camundaDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)) {
+                                    check = true;
+                                    console.log("duplicita : value = " + check);
+                                    break;
+                                }
+                            }
+                            if (!check) {
+                                $scope.camundaDataUrl.push({
+                                    name: nameId,
+                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)
+                                });
 
 
-          $scope.upload = function(nameId) {
-            $scope.inputName = document.getElementById(nameId).files[0].name+"";
-            document.getElementsByName(nameId)[0].value = $scope.inputName;
-            var formData = new FormData();
-            formData.append('data', document.getElementById(nameId).files[0]);
-            $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/'+ nameId +'/data'), formData, {
-                transformRequest: angular.identity,
-                headers: {'Content-Type': undefined}
+                                $scope.inputName = document.getElementById(nameId).files[0].name + "";
+                                document.getElementsByName(nameId)[0].value = $scope.inputName;
+                                var formData = new FormData();
+                                formData.append('data', document.getElementById(nameId).files[0]);
+                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId + '/data'), formData, {
+                                    transformRequest: angular.identity,
+                                    headers: {'Content-Type': undefined}
+                                });
+
+
+                                $scope.dataInputName.push({
+                                    type: nameId,
+                                    name: document.getElementById(nameId).files[0].name
+                                });
+
+
+                            }
+
+
+                        };
+                    });
+                });
+            }]);
+
+            camForm.variableManager.createVariable({
+                name: 'camundaDataUrl',
+                type: 'json',
+                value: $scope.camundaDataUrl
             });
-          };
-       });
-      });
-    }]);
 
+            camForm.variableManager.createVariable({
+                name: 'dataInputName',
+                type: 'json',
+                value: $scope.dataInputName
+            });
 
 
         </script>

@@ -449,7 +449,7 @@
         <di:waypoint xsi:type="dc:Point" x="93" y="191" />
         <di:waypoint xsi:type="dc:Point" x="93" y="143" />
         <di:waypoint xsi:type="dc:Point" x="523" y="143" />
-        <di:waypoint xsi:type="dc:Point" x="911" y="642" />
+        <di:waypoint xsi:type="dc:Point" x="920" y="646" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="263" y="122" width="90" height="12" />
         </bpmndi:BPMNLabel>

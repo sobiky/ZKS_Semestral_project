@@ -1,5 +1,22 @@
 <form name="Supplier">
     <div class="form-group">
-        moznost vybrat dodavatele
+        <label>Jmeno Dodavatele</label>
+        <input type="text"
+               cam-variable-name="supplierName"
+               cam-variable-type="String"/>
+        <br>
+        <label>Popis o co se stara</label>
+        <input type="text"
+               cam-variable-name="supplierDescription"
+               cam-variable-type="String"/>
+        <br>
+        <label>Pristup do IT systemu </label>
+        <select
+                cam-variable-name="supplierITSystem"
+                cam-variable-type="String"
+                cam-choices="systemsList">
+        </select>
+        <br>
+        <label>Upload smuluv</label>//tady bude dalsi upload smluv RIP :|
     </div>
 </form>

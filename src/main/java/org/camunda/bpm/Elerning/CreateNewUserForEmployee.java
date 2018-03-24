@@ -180,8 +180,9 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         }
         return data;
     }
+
     //todo dodelat funkci pro generovani hesla
-    private String generatedPassword(){
+    private String generatedPassword() {
         return "";
     }
 }
