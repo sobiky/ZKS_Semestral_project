@@ -79,6 +79,7 @@
         <!--cam-max-filesize="10000000">-->
         <!--<button ng-click="upload()">Upload</button>-->
 
+        <!--<script>-->
         <script cam-script type="text/form-script">
             $scope.camundaDataUrl = [];
             $scope.dataInputName = [];
@@ -117,6 +118,29 @@
                                     type: nameId,
                                     name: document.getElementById(nameId).files[0].name
                                 });
+
+
+                                var fileList = document.getElementById(nameId).files;
+                                console.log(fileList);
+                                var fileReader = new FileReader();
+                                fileReader.readAsArrayBuffer(fileList[0]);
+                                if (fileReader && fileList && fileList.length) {
+                                    fileReader.onload = function () {
+                                        var data = fileReader.result;
+                                        console.log(camForm);
+                                        camForm.variableManager.createVariable({
+                                            name: nameId + 'Files',
+                                            type: 'File',
+                                            value: btoa(
+                                                new Uint8Array(data)
+                                                    .reduce((data, byte) => data + String.fromCharCode(byte), '')),
+                                            valueInfo: {
+                                                filename: document.getElementById(nameId).files[0].name
+                                            }
+                                        });
+
+                                    };
+                                }
 
 
                             }

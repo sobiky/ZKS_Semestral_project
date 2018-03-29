@@ -20,9 +20,9 @@ public class Document implements Serializable {
     private Supplier supplier;
 
     @Lob
-    private File binaryFile;
+    private byte[] binaryFile;
 
-    public Document(String name, String tenant, String url, String type, Supplier supplier, File binaryFile) {
+    public Document(String name, String tenant, String url, String type, Supplier supplier, byte[] binaryFile) {
         super();
         this.name = name;
         this.tenant = tenant;
@@ -52,11 +52,11 @@ public class Document implements Serializable {
         this.name = name;
     }
 
-    public File getBinaryFile() {
+    public byte[] getBinaryFile() {
         return binaryFile;
     }
 
-    public void setBinaryFile(File binaryFile) {
+    public void setBinaryFile(byte[] binaryFile) {
         this.binaryFile = binaryFile;
     }
 
@@ -89,5 +89,19 @@ public class Document implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+
+        return "Document{" +
+                "documentId=" + documentId +
+                ", name='" + name + '\'' +
+                ", tenant='" + tenant + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", supplier=" + supplier +
+                ", binaryFile=" + binaryFile +
+                '}';
     }
 }
