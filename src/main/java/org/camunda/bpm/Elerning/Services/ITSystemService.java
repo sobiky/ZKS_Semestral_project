@@ -27,7 +27,7 @@ public class ITSystemService implements JavaDelegate {
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         Query query = em.createQuery("select e from ITDepartment e where e.tenant = :id");
-        query.setParameter("id", "tututu");
+        query.setParameter("id", delegateExecution.getVariable("tenant"));
         List<ITDepartment> result = query.getResultList();
         List<String> department = new ArrayList<String>();
         for (ITDepartment item : result) {
@@ -41,7 +41,7 @@ public class ITSystemService implements JavaDelegate {
         delegateExecution.setVariable("systemsList", Variables.objectValue(department.toArray())
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
         //todo tady je videt url objektu a data jeho
-        LOGGER.info(String.valueOf(delegateExecution.getVariables()));
+//        LOGGER.info(String.valueOf(delegateExecution.getVariables()));
         TypedValue fileData = delegateExecution.getVariableTyped("camundaDataUrl");
         if (!Objects.equals(fileData.getValue().toString(), "[]")) {
 

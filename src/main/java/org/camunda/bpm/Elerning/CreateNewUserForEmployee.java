@@ -78,7 +78,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             Employee employee = new Employee();
             employee.setEmloyeeId(0);
             employee.setUserName(userName);
-            employee.setDepartment("test");
+            employee.setDepartment(aData.get("department"));
 
             em.persist(employee);
             em.getTransaction().commit();
@@ -104,6 +104,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         it.setLastName(delegateExecution.getVariable("ITWorkerLastName").toString());
         it.setPassword(NEW_PASSWORD);
         identityService.saveUser(it);
+        List<User> userListWithOutIT = userList;
         userList.add(it);
 
         for (User user : userList) {
@@ -113,13 +114,12 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         LOGGER.info(customer.getValue().toString());
         LOGGER.info("Type is: " + customer.getType().getName());
 
-
+//todo pridat dalsi list bez IT pracovnika kterym to projedu
         delegateExecution.setVariable("listUsersRaw", userList);
+        delegateExecution.setVariable("userListWithOutIT", userListWithOutIT);
         delegateExecution.setVariable("sizeListUserRaw", userList.size());
         //     serialization variables
         delegateExecution.setVariable("names", Variables.objectValue(users.toArray())
-                .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
-        delegateExecution.setVariable("listUserJson", objectValue(userList)
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
     }
 

@@ -1,7 +1,13 @@
 <form name="ViewDocument">
     <div class="form-group">
+        <!--//todo veci co chci dosta z me databaze
+        //todo ITsystems,suppliers,employees,dokumens-->
         <!--<a cam-file-download="IT_Gudeline"></a>-->
+        <h2>Organizace : {{tenant}}
+        </h2>
+        <h3>IT systemy</h3>
         <div ng-if="IT_Gudeline">
+            <div>Gudeline :</div>
             <a href="/engine-rest/task/{{camForm.taskId}}/variables/IT_Gudeline/data" download="IT_Gudeline.pdf"
                role="button">
                 IT_Gudeline
@@ -10,6 +16,7 @@
         </div>
 
         <div ng-if="Play_backup">
+            <div>Plan zalohovani :</div>
             <a href="/engine-rest/task/{{camForm.taskId}}/variables/Play_backup/data" download="Play_backup.pdf"
                role="button">
                 Play_backup
@@ -18,6 +25,7 @@
         </div>
 
         <div ng-if="Plan_Repair">
+            <div>Plan opravy :</div>
             <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Repair/data" download="Plan_Repair.pdf"
                role="button">
                 Plan_Repair
@@ -26,6 +34,7 @@
         </div>
 
         <div ng-if="Plan_Shred">
+            <div>Plan skratovani :</div>
             <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Shred/data" download="Plan_Shred.pdf"
                role="button">
                 Plan_Shred
@@ -34,6 +43,7 @@
         </div>
 
         <div ng-if="Plan_Archive">
+            <div>Plan archivace :</div>
             <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Archive/data" download="Plan_Archive.pdf"
                role="button">
                 Plan_Archive
@@ -48,6 +58,8 @@
         camForm.variableManager.fetchVariable('Plan_Repair');
         camForm.variableManager.fetchVariable('Plan_Shred');
         camForm.variableManager.fetchVariable('Plan_Archive');
+
+        camForm.variableManager.fetchVariable('tenant');
          });
          camForm.on('variables-restored', function() {
         $scope.IT_Gudeline = camForm.variableManager.variableValue('IT_Gudeline');
@@ -55,6 +67,8 @@
         $scope.Plan_Repair = camForm.variableManager.variableValue('Plan_Repair');
         $scope.Plan_Shred = camForm.variableManager.variableValue('Plan_Shred');
         $scope.Plan_Archive = camForm.variableManager.variableValue('Plan_Archive');
+
+        $scope.tenant = camForm.variableManager.variableValue('tenant');
           });
 
 

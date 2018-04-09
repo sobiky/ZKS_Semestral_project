@@ -14,18 +14,20 @@ public class Supplier implements Serializable {
     private String name;
     private String description;
     private String ItSystem;
+    private String tenant;
 
     @OneToMany(targetEntity = org.camunda.bpm.Elerning.Model.Document.class,
             mappedBy = "supplier", cascade = CascadeType.ALL)
     private Set<Document> documents;
 
-    public Supplier(String name, String description, String itSystem, Set<Document> documents) {
+    public Supplier(String name, String description, String itSystem, Set<Document> documents,String tenant) {
         super();
         this.documents = new HashSet<>();
         this.name = name;
         this.description = description;
         this.ItSystem = itSystem;
         this.documents = documents;
+        this.tenant = tenant;
     }
 
     public Supplier() {
@@ -74,5 +76,12 @@ public class Supplier implements Serializable {
 
     public void setDocuments(Set<Document> documents) {
         this.documents = documents;
+    }
+    public String getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 }

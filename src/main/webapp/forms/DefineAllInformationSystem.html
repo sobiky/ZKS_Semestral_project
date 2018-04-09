@@ -1,25 +1,23 @@
 <form name="DefineAllInformationSystem">
     <div class="form-group">
-        <script cam-script type="text/form-script">
-            var listUsers = $scope.listInformationSystem=[];
+        <script cam-script type="text/form-script" >
+            $scope.listInformationSystem = [];
 
-            $scope.addItem = function() {
-            $scope.listInformationSystem.push({name:'', url: '',description: '',
-            adminName:'',adminEmail:'',adminTel:''
-            });
+            $scope.addItem = function () {
+                $scope.listInformationSystem.push({
+                    name: '', url: '', description: '',
+                    adminName: '', adminEmail: '', adminTel: ''
+                });
             };
 
-            $scope.removeItem = function(index) {
-            $scope.listUsers.userList.splice(index, 1);
-            };
-            camForm.on('form-loaded', function() {
-            camForm.variableManager.createVariable({
-            name :'listInformationSystem',
-            type:'json',
-            value:$scope.listInformationSystem
-            });
-            });
 
+            camForm.on('form-loaded', function () {
+                camForm.variableManager.createVariable({
+                    name: 'listInformationSystem',
+                    type: 'json',
+                    value: $scope.listInformationSystem
+                });
+            });
 
 
         </script>
@@ -39,7 +37,7 @@
                 <input cam-variable-name="i.description"
                        cam-variable-type="String"
                        type="text" ng-model="i.description"/>
-                    <span class="glyphicon glyphicon-question-sign"></span>
+                <span class="glyphicon glyphicon-question-sign"></span>
                 <br>
                 <H3>Spravce</H3>
                 <label>Jmeno </label>
@@ -60,4 +58,8 @@
             </button>
         </div>
     </div>
+    <script cam-script type="text/form-script">
+        debugger;
+
+    </script>
 </form>

@@ -87,6 +87,7 @@
                 camForm.on('form-loaded', function () {
                     $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
                         $scope.upload = function (nameId) {
+                            console.log(nameId);
                             console.log($scope.camundaDataUrl.length);
                             var check = false;
                             for (let i = 0; i < $scope.camundaDataUrl.length; i++) {

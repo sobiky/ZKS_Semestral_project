@@ -24,6 +24,7 @@ public class ITDepartmentService implements JavaDelegate {
         LOGGER.info("---------VARIABLES---------");
         LOGGER.info(delegateExecution.getVariables().toString());
         LOGGER.info("---------VARIABLES---------");
+        LOGGER.info(delegateExecution.getVariable("listInformationSystem").toString());
         TypedValue itDepartments = delegateExecution.getVariableTyped("listInformationSystem");
         List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(itDepartments);
         for (Map<String, String> item : data) {
@@ -36,7 +37,7 @@ public class ITDepartmentService implements JavaDelegate {
             department.setDescription(item.get("description"));
             department.setName(item.get("name"));
             department.setUrl(item.get("url"));
-            department.setTenant("tututu");
+            department.setTenant(delegateExecution.getVariable("tenant").toString());
 
             AdministratorITSystem admin = new AdministratorITSystem();
             admin.setAdminId(0);

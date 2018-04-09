@@ -1,5 +1,115 @@
 <form name="Supplier">
+    <!--//todo dodelat lepsi kontrolu duplicity dokumentu-->
     <div class="form-group">
+
+        <!--<script>-->
+        <script cam-script type="text/form-script">
+            $scope.listFile = []
+
+
+            $scope.addItem = function() {
+            $scope.listFile.push({name:''});
+            };
+
+            $scope.removeItem = function(index) {
+            $scope.listFile.splice(index, 1);
+            };
+
+
+            $scope.supplierDataUrl = [];
+            $scope.supplierFileName = [];
+
+            inject(['$http', 'Uri', function ($http, Uri) {
+                camForm.on('form-loaded', function () {
+                    $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
+                        $scope.upload = function (nameId) {
+                            var nameId = "file"+nameId;
+                            console.log(nameId);
+                            console.log($scope.supplierDataUrl.length);
+                            var check = false;
+                            debugger;
+                            for (let i = 0; i < $scope.supplierDataUrl.length; i++) {
+                                <!--console.log($scope.supplierDataUrl[i].url);-->
+                                if ($scope.supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)) {
+                                    check = true;
+                                    console.log("duplicita : value = " + check);
+                                    break;
+                                }
+                            }
+
+                            if (!check) {
+                                $scope.supplierDataUrl.push({
+                                    name: nameId,
+                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)
+                                });
+
+
+                                $scope.inputName = document.getElementById(nameId).files[0].name + "";
+                                <!--document.getElementsByName(nameId)[0].value = $scope.inputName;-->
+                                var formData = new FormData();
+                                formData.append('data', document.getElementById(nameId).files[0]);
+                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId + '/data'), formData, {
+                                    transformRequest: angular.identity,
+                                    headers: {'Content-Type': undefined}
+                                });
+
+
+                                $scope.supplierFileName.push({
+                                    type: nameId,
+                                    name: document.getElementById(nameId).files[0].name
+                                });
+
+
+                                var fileList = document.getElementById(nameId).files;
+                                console.log(fileList);
+                                var fileReader = new FileReader();
+                                fileReader.readAsArrayBuffer(fileList[0]);
+                                if (fileReader && fileList && fileList.length) {
+                                    fileReader.onload = function () {
+                                        var data = fileReader.result;
+                                        console.log(camForm);
+                                        camForm.variableManager.createVariable({
+                                            name: nameId + 'Files',
+                                            type: 'File',
+                                            value: btoa(
+                                                new Uint8Array(data)
+                                                    .reduce((data, byte) => data + String.fromCharCode(byte), '')),
+                                            valueInfo: {
+                                                filename: document.getElementById(nameId).files[0].name
+                                            }
+                                        });
+
+                                    };
+                                }
+
+
+                            }
+
+
+                        };
+                    });
+                });
+            }]);
+
+            camForm.variableManager.createVariable({
+                name: 'supplierDataUrl',
+                type: 'json',
+                value: $scope.supplierDataUrl
+            });
+
+            camForm.variableManager.createVariable({
+                name: 'supplierFileName',
+                type: 'json',
+                value: $scope.supplierFileName
+            });
+
+
+
+
+
+
+
+        </script>
         <label>Jmeno Dodavatele</label>
         <input type="text"
                cam-variable-name="supplierName"
@@ -17,6 +127,20 @@
                 cam-choices="systemsList">
         </select>
         <br>
-        <label>Upload smuluv</label>//tady bude dalsi upload smluv RIP :|
+            <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
+        <div ng-repeat=" i in listFile">
+            <input type="file" name="file{{$index}}" id="file{{$index}}"
+                   cam-max-filesize="10000000"
+                   accept="application/pdf"
+                   style="display:inline"
+            />
+            <button ng-click="upload($index)">Upload</button>
+            <button class="btn btn-default" ng-click="removeItem($index)">
+                <span class="glyphicon glyphicon-minus"></span>
+            </button>
+        </div>
+        <button class="btn btn-default" ng-click="addItem()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
     </div>
 </form>
