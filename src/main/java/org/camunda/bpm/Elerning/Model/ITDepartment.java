@@ -99,7 +99,14 @@ public class ITDepartment implements Serializable {
                 ", url='" + url + '\'' +
                 ", description='" + description + '\'' +
                 ", tenant='" + tenant + '\'' +
-                ", admin=" + admin +
+                ", admin=" + printAdmin(admin) +
                 '}';
+    }
+    private String printAdmin(Set<AdministratorITSystem> supplier){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (AdministratorITSystem admin :supplier) {
+            stringBuilder.append(admin.toString());
+        }
+        return stringBuilder.toString();
     }
 }

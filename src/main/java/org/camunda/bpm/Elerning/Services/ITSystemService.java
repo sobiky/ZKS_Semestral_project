@@ -15,6 +15,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 import java.util.logging.Logger;
@@ -50,44 +51,45 @@ public class ITSystemService implements JavaDelegate {
             TypedValue fileName = delegateExecution.getVariableTyped("dataInputName");
             List<Map<String, String>> dataName = CreateNewUserForEmployee.PavelMagicParser(fileName);
             List<Document> documents = new LinkedList<>();
-
-            //todo dodelat kontrolu zavorky i pro ostatni
-            for (Map<String, String> aData : data) {
-                String url = aData.get("url");
-                if (aData.get("url").charAt(aData.get("url").length() - 1) == '}') {
-                    url = aData.get("url").substring(0, aData.get("url").length() - 2);
-                }
-                Document document = new Document();
-                document.setTenant(delegateExecution.getVariable("tenant").toString());
-                document.setUrl(aData.get("url"));
-                LOGGER.info("*********");
-                LOGGER.info("name=" + aData.get("name"));
-                LOGGER.info("url=" + url);
-                documents.add(document);
-            }
-            int i = 0;
-            for (Map<String, String> aData : dataName) {
-                documents.get(i).setType(aData.get("type"));
-                documents.get(i).setName(aData.get("name"));
-
-                ByteArrayInputStream bais =
-                        (ByteArrayInputStream) delegateExecution.getVariable(documents.get(i).getType()+"Files");
-
-                byte[] bytes = new byte[bais.available()];
-                bais.read(bytes);
-                documents.get(i).setBinaryFile(bytes);
+            documents = fileUploadToDatabase(delegateExecution,data,dataName);
 
 
-                LOGGER.info("*********");
-                LOGGER.info("type=" + aData.get("type"));
-                LOGGER.info("name=" + aData.get("name"));
-                i++;
-            }
-
-            for (Document doc : documents) {
-                LOGGER.info("DATA CO ZATIM MAM");
-                LOGGER.info(doc.toString());
-            }
+//            for (Map<String, String> aData : data) {
+//                String url = aData.get("url");
+//                if (aData.get("url").charAt(aData.get("url").length() - 1) == '}') {
+//                    url = aData.get("url").substring(0, aData.get("url").length() - 2);
+//                }
+//                Document document = new Document();
+//                document.setTenant(delegateExecution.getVariable("tenant").toString());
+//                document.setUrl(aData.get("url"));
+//                LOGGER.info("*********");
+//                LOGGER.info("name=" + aData.get("name"));
+//                LOGGER.info("url=" + url);
+//                documents.add(document);
+//            }
+//            int i = 0;
+//            for (Map<String, String> aData : dataName) {
+//                documents.get(i).setType(aData.get("type"));
+//                documents.get(i).setName(aData.get("name"));
+//
+//                ByteArrayInputStream bais =
+//                        (ByteArrayInputStream) delegateExecution.getVariable(documents.get(i).getType()+"Files");
+//
+//                byte[] bytes = new byte[bais.available()];
+//                bais.read(bytes);
+//                documents.get(i).setBinaryFile(bytes);
+//
+//
+//                LOGGER.info("*********");
+//                LOGGER.info("type=" + aData.get("type"));
+//                LOGGER.info("name=" + aData.get("name"));
+//                i++;
+//            }
+//
+//            for (Document doc : documents) {
+//                LOGGER.info("DATA CO ZATIM MAM");
+//                LOGGER.info(doc.toString());
+//            }
 
 
             em.getTransaction().begin();
@@ -95,54 +97,56 @@ public class ITSystemService implements JavaDelegate {
                 em.persist(doc);
             }
             em.getTransaction().commit();
-//             delegateExecution.getVariable(""+documents.get(0).getType()+"Files");
-//            ByteArrayInputStream bais =
-//                    (ByteArrayInputStream) delegateExecution.getVariable(documents.get(0).getType() + "Files");
-//
-//            byte[] bytes = new byte[bais.available()];
-//            bais.read(bytes);
-
-//            for (Byte bi:bytes) {
-//                LOGGER.info(String.valueOf(bi));
-//            }
-
-//            bytes.
-//            byte[] dataFile = Base64.getDecoder().decode(bytes);
-//            try (OutputStream stream = new FileOutputStream("abcdef.pdf")) {
-//                stream.write(bytes);
-//                stream.flush();
-//            }
-
-//            String url = "http://localhost:8080" + documents.get(0).getUrl() + "/data";
-//
-//            URL obj = new URL(url);
-//            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-//
-//            // optional default is GET
-//            con.setRequestMethod("GET");
-//
-//            //add request header
-//            con.setRequestProperty("User-Agent", "Mozilla/5.0");
-//
-//            int responseCode = con.getResponseCode();
-//            System.out.println("\nSending 'GET' request to URL : " + url);
-//            System.out.println("Response Code : " + responseCode);
-//
-//            BufferedReader in = new BufferedReader(
-//                    new InputStreamReader(con.getInputStream()));
-//            String inputLine;
-//            StringBuffer response = new StringBuffer();
-//
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            in.close();
-//
-//            //print result
-//            LOGGER.info(response.toString());
 
 
         }
+    }
+    public static List<Document> fileUploadToDatabase(DelegateExecution delegateExecution, List<Map<String, String>> data,List<Map<String, String>> dataName) throws IOException {
+        List<Document> documents = new LinkedList<>();
+        for (Map<String, String> aData : data) {
+            LOGGER.info("DATAURL");
+            LOGGER.info(aData.get("url"));
+            LOGGER.info("/DATAURL");
+            String url = aData.get("url");
+            //todo dodelat kontrolu zavorky i pro ostatni
+            if (aData.get("url").charAt(aData.get("url").length() - 1) == '}') {
+                url = aData.get("url").substring(0, aData.get("url").length() - 2);
+            }
+            Document document = new Document();
+            document.setTenant(delegateExecution.getVariable("tenant").toString());
+            document.setUrl(url);
+            LOGGER.info("*********");
+            LOGGER.info("name=" + aData.get("name"));
+            LOGGER.info("url=" + url);
+            documents.add(document);
+        }
+        int i = 0;
+        for (Map<String, String> aData : dataName) {
+            documents.get(i).setType(aData.get("type"));
+            String name = aData.get("name");
+            if (aData.get("name").charAt(aData.get("name").length() - 1) == '}') {
+                name = aData.get("name").substring(0, aData.get("name").length() - 2);
+            }
+            documents.get(i).setName(name);
+            ByteArrayInputStream bais =
+                    (ByteArrayInputStream) delegateExecution.getVariable(documents.get(i).getType()+"Files");
+
+            byte[] bytes = new byte[bais.available()];
+            bais.read(bytes);
+            documents.get(i).setBinaryFile(bytes);
+
+
+            LOGGER.info("*********");
+            LOGGER.info("type=" + aData.get("type"));
+            LOGGER.info("name=" + aData.get("name"));
+            i++;
+        }
+
+        for (Document doc : documents) {
+            LOGGER.info("DATA CO ZATIM MAM");
+            LOGGER.info(doc.toString());
+        }
+        return documents;
     }
 
 

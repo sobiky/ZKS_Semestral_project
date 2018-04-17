@@ -1,6 +1,8 @@
 package org.camunda.bpm.Elerning.Services;
 
 import org.camunda.bpm.Elerning.CreateNewUserForEmployee;
+import org.camunda.bpm.Elerning.Model.ElectronicData;
+import org.camunda.bpm.Elerning.Model.PapperData;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.variable.value.TypedValue;
@@ -35,7 +37,6 @@ public class DocumentsService implements JavaDelegate {
             List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(itDepartments);
 
             //todo mam data ktere chci poslat do databaze.
-            // todo je treba je tam jeste poslat a udelat to tak aby to fungovalo paraelne (NEMAM TUSENI JAK TO BUDE FUNGOVAT :( :D)
             for (Map<String, String> item : data) {
                 for (Map.Entry<String, String> pair : item.entrySet()) {
                     LOGGER.info("/" + pair.getKey() + " >>> " + pair.getValue());
@@ -43,12 +44,46 @@ public class DocumentsService implements JavaDelegate {
 
             }
         }
+        em.getTransaction().begin();
+        if (!delegateExecution.getVariable("networkDisk").toString().equals("")) {
+            ElectronicData electronicData = new ElectronicData();
+            electronicData.setTenant(delegateExecution.getVariable("tenant").toString());
+            electronicData.setNetworkDisk(delegateExecution.getVariable("networkDisk").toString());
+            electronicData.setType("Elektronic");
+            electronicData.setITSystem(delegateExecution.getVariable("systemItem").toString());
+            em.persist(electronicData);
+        }
+
+        if (!delegateExecution.getVariable("papper").toString().equals("")) {
+            PapperData papperData = new PapperData();
+            papperData.setTennat(delegateExecution.getVariable("tenant").toString());
+            papperData.setType("Papper");
+            papperData.setPlace(delegateExecution.getVariable("papper").toString());
+            em.persist(papperData);
+        }
+
+
+        em.getTransaction().commit();
+
         LOGGER.info("//////////////////////VARIABLES/////////////////");
         LOGGER.info(delegateExecution.getVariables().toString());
 //        if(delegateExecution.getVariable("IT_Gudeline")!=null){
 //            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
 //        }else LOGGER.info("NULL POINTER");
         LOGGER.info("//////////////////////VARIABLES/////////////////");
+        removeAllData(delegateExecution);
+
+        LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
+        LOGGER.info(delegateExecution.getVariables().toString());
+//        if(delegateExecution.getVariable("IT_Gudeline")!=null){
+//            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
+//        }else LOGGER.info("NULL POINTER");
+        LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
     }
 
+    private void removeAllData(DelegateExecution del){
+        del.removeVariable("networkDisk");
+        del.removeVariable("systemItem");
+        del.removeVariable("papper");
+    }
 }

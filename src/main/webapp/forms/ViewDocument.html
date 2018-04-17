@@ -3,77 +3,177 @@
         <!--//todo veci co chci dosta z me databaze
         //todo ITsystems,suppliers,employees,dokumens-->
         <!--<a cam-file-download="IT_Gudeline"></a>-->
+
+
+        <script cam-script type="text/form-script">
+        <!--<script>-->
+            camForm.on('form-loaded', function () {
+                camForm.variableManager.fetchVariable('IT_Gudeline');
+                camForm.variableManager.fetchVariable('Play_backup');
+                camForm.variableManager.fetchVariable('Plan_Repair');
+                camForm.variableManager.fetchVariable('Plan_Shred');
+                camForm.variableManager.fetchVariable('Plan_Archive');
+
+                camForm.variableManager.fetchVariable('documentsName');
+                camForm.variableManager.fetchVariable('documents');
+                camForm.variableManager.fetchVariable('itSystems');
+
+                camForm.variableManager.fetchVariable('tenant');
+            });
+            camForm.on('variables-restored', function () {
+                $scope.IT_Gudeline = camForm.variableManager.variableValue('IT_Gudeline');
+                $scope.Play_backup = camForm.variableManager.variableValue('Play_backup');
+                $scope.Plan_Repair = camForm.variableManager.variableValue('Plan_Repair');
+                $scope.Plan_Shred = camForm.variableManager.variableValue('Plan_Shred');
+                $scope.Plan_Archive = camForm.variableManager.variableValue('Plan_Archive');
+
+                $scope.documentsName = camForm.variableManager.variableValue('documentsName');
+                $scope.documents = JSON.parse(camForm.variableManager.variableValue('documents'));
+                $scope.itSystems = JSON.parse(camForm.variableManager.variableValue('itSystems'));
+                $scope.IT_GudelineName = "default";
+                $scope.Play_backupName = "default";
+                $scope.Plan_RepairName = "default";
+                $scope.Plan_ShredName = "default";
+                $scope.Plan_ArchiveName = "default";
+
+                $scope.supplier = new Array();
+
+
+                <!--console.log($scope.documentsName);-->
+
+                for (let i = 0; i < $scope.documents.length; i++) {
+                    <!--debugger-->
+                    if ($scope.documents[i].supplier != null) {
+                        if (!checkExistSupplier($scope.documents[i].supplier,$scope.supplier)) {
+//                            $scope.supplier.push($scope.documents[i].supplier);
+                            $scope.supplier.push({
+                                supplier : $scope.documents[i].supplier,
+                                documents : []
+                            });
+                        }
+                        pushFileToSupplier($scope.documents[i],$scope.supplier)
+                    }
+                    console.log($scope.documents[i].name);
+                    if ($scope.documents[i].type === "IT_Gudeline") {
+                        $scope.IT_GudelineName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Play_backup") {
+                        $scope.Play_backupName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Repair") {
+                        $scope.Plan_RepairName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Shred") {
+                        $scope.Plan_ShredName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Archive") {
+                        $scope.Plan_ArchiveName = $scope.documents[i].name;
+                    }
+                }
+
+                console.log($scope.supplier);
+                console.log($scope.documents);
+                console.log($scope.itSystems);
+                <!--console.log(JSON.parse($scope.documents));-->
+
+
+                $scope.tenant = camForm.variableManager.variableValue('tenant');
+            });
+
+            <!--debugger-->
+            function checkExistSupplier(supplier, arrayDocuments) {
+            if(arrayDocuments.length == 0)return false;
+                for (let i = 0; i < arrayDocuments.length; i++) {
+                    if (arrayDocuments[i].supplier.name == supplier.name) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function pushFileToSupplier(document, arrayDocuments) {
+                for (let i = 0 ; i< arrayDocuments.length;i++){
+                    if(document.supplier.name == arrayDocuments[i].supplier.name){
+                        arrayDocuments[i].documents.push(document);
+                    }
+                }
+            }
+
+        </script>
+
+
         <h2>Organizace : {{tenant}}
         </h2>
-        <h3>IT systemy</h3>
+        <h3>Dokumenty</h3>
+        <!--<div ng-repeat="doc in documents">-->
+            <!--{{doc.name}}-->
+        <!--</div>-->
+        <h3>Dodavatele</h3>
+        <!--{{supplier[0].supplier.name}}-->
+        <div ng-repeat="supp in supplier">
+            Nazev dodavatele : {{supp.supplier.name}}<br>
+            Popis o co se stara :{{supp.supplier.description}}<br>
+            System o ktery se stara : {{supp.supplier.itsystem}}<br>
+            <div>Smlouvy</div>
+            <p ng-repeat="doc in supp.documents">
+                <a href="{{doc.url}}/data" download="{{doc.name}}"
+                   role="button">{{doc.name}}
+                </a>
+            </p>
+            <hr>
+        </div>
+
+
+
+        <!--<div ng-repeat="it in itSystems">-->
+        <!--{{it.name}}-->
+        <!--</div>-->
+
+        <h3>Seznam interni dokumentace</h3>
         <div ng-if="IT_Gudeline">
             <div>Gudeline :</div>
-            <a href="/engine-rest/task/{{camForm.taskId}}/variables/IT_Gudeline/data" download="IT_Gudeline.pdf"
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/IT_Gudeline/data" download="{{IT_GudelineName}}"
                role="button">
                 IT_Gudeline
             </a>
-        <br>
+            <br>
         </div>
 
         <div ng-if="Play_backup">
             <div>Plan zalohovani :</div>
-            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Play_backup/data" download="Play_backup.pdf"
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Play_backup/data" download="{{Play_backupName}}"
                role="button">
                 Play_backup
             </a>
-        <br>
+            <br>
         </div>
 
         <div ng-if="Plan_Repair">
             <div>Plan opravy :</div>
-            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Repair/data" download="Plan_Repair.pdf"
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Repair/data" download="{{Plan_RepairName}}"
                role="button">
                 Plan_Repair
             </a>
-        <br>
+            <br>
         </div>
 
         <div ng-if="Plan_Shred">
             <div>Plan skratovani :</div>
-            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Shred/data" download="Plan_Shred.pdf"
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Shred/data" download="{{Plan_ShredName}}"
                role="button">
                 Plan_Shred
             </a>
-        <br>
+            <br>
         </div>
 
         <div ng-if="Plan_Archive">
             <div>Plan archivace :</div>
-            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Archive/data" download="Plan_Archive.pdf"
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Archive/data" download="{{Plan_ArchiveName}}"
                role="button">
                 Plan_Archive
             </a>
-        <br>
+            <br>
         </div>
-
-        <script cam-script type="text/form-script">
-         camForm.on('form-loaded', function() {
-        camForm.variableManager.fetchVariable('IT_Gudeline');
-        camForm.variableManager.fetchVariable('Play_backup');
-        camForm.variableManager.fetchVariable('Plan_Repair');
-        camForm.variableManager.fetchVariable('Plan_Shred');
-        camForm.variableManager.fetchVariable('Plan_Archive');
-
-        camForm.variableManager.fetchVariable('tenant');
-         });
-         camForm.on('variables-restored', function() {
-        $scope.IT_Gudeline = camForm.variableManager.variableValue('IT_Gudeline');
-        $scope.Play_backup = camForm.variableManager.variableValue('Play_backup');
-        $scope.Plan_Repair = camForm.variableManager.variableValue('Plan_Repair');
-        $scope.Plan_Shred = camForm.variableManager.variableValue('Plan_Shred');
-        $scope.Plan_Archive = camForm.variableManager.variableValue('Plan_Archive');
-
-        $scope.tenant = camForm.variableManager.variableValue('tenant');
-          });
-
-
-
-        </script>
 
 
         <!--<a href="/engine-rest/task/{{camForm.taskId}}/variables/uploadedFile1/data" role="button">-->

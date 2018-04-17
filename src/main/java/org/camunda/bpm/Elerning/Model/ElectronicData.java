@@ -14,12 +14,14 @@ public class ElectronicData implements Serializable{
     private String type;
     private String ITSystem;
     private String NetworkDisk;
+    private String tenant;
 
-    public ElectronicData(String type, String ITSystem, String networkDisk) {
+    public ElectronicData(String type, String ITSystem, String networkDisk,String tenant) {
         super();
         this.type = type;
         this.ITSystem = ITSystem;
-        NetworkDisk = networkDisk;
+        this.NetworkDisk = networkDisk;
+        this.tenant = tenant;
     }
     public ElectronicData(){
         super();
@@ -55,5 +57,24 @@ public class ElectronicData implements Serializable{
 
     public void setNetworkDisk(String networkDisk) {
         NetworkDisk = networkDisk;
+    }
+
+    public String getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
+    }
+
+    @Override
+    public String toString() {
+        return "ElectronicData{" +
+                "ID_ElectronicData=" + ID_ElectronicData +
+                ", type='" + type + '\'' +
+                ", ITSystem='" + ITSystem + '\'' +
+                ", NetworkDisk='" + NetworkDisk + '\'' +
+                ", tenant='" + tenant + '\'' +
+                '}';
     }
 }

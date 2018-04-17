@@ -2,9 +2,9 @@
     <!--//todo dodelat lepsi kontrolu duplicity dokumentu-->
     <div class="form-group">
 
-        <!--<script>-->
         <script cam-script type="text/form-script">
-            $scope.listFile = []
+        <!--<script>-->
+            $scope.listFile = [];
 
 
             $scope.addItem = function() {
@@ -24,13 +24,19 @@
                     $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
                         $scope.upload = function (nameId) {
                             var nameId = "file"+nameId;
+
+                            $scope.inputName = document.getElementById(nameId).files[0].name + "";
+                            $scope.hascode = hashCode($scope.inputName);
+
+
                             console.log(nameId);
+                            console.log( "hashcode : "+ $scope.hascode);
                             console.log($scope.supplierDataUrl.length);
                             var check = false;
                             debugger;
                             for (let i = 0; i < $scope.supplierDataUrl.length; i++) {
                                 <!--console.log($scope.supplierDataUrl[i].url);-->
-                                if ($scope.supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)) {
+                                if ($scope.supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)) {
                                     check = true;
                                     console.log("duplicita : value = " + check);
                                     break;
@@ -40,15 +46,15 @@
                             if (!check) {
                                 $scope.supplierDataUrl.push({
                                     name: nameId,
-                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)
+                                    hashcode : $scope.hascode+"",
+                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)
                                 });
 
 
-                                $scope.inputName = document.getElementById(nameId).files[0].name + "";
                                 <!--document.getElementsByName(nameId)[0].value = $scope.inputName;-->
                                 var formData = new FormData();
                                 formData.append('data', document.getElementById(nameId).files[0]);
-                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId + '/data'), formData, {
+                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode + '/data'), formData, {
                                     transformRequest: angular.identity,
                                     headers: {'Content-Type': undefined}
                                 });
@@ -56,6 +62,7 @@
 
                                 $scope.supplierFileName.push({
                                     type: nameId,
+                                    hashcode : $scope.hascode+"",
                                     name: document.getElementById(nameId).files[0].name
                                 });
 
@@ -68,8 +75,10 @@
                                     fileReader.onload = function () {
                                         var data = fileReader.result;
                                         console.log(camForm);
+
+                                        var hashNameFile = "Files" + $scope.hascode;
                                         camForm.variableManager.createVariable({
-                                            name: nameId + 'Files',
+                                            name:  hashNameFile,
                                             type: 'File',
                                             value: btoa(
                                                 new Uint8Array(data)
@@ -90,7 +99,13 @@
                     });
                 });
             }]);
-
+            function hashCode(s) {
+                let h = 0, l = s.length, i = 0;
+                if ( l > 0 )
+                    while (i < l)
+                        h = (h << 5) - h + s.charCodeAt(i++) | 0;
+                return h;
+            }
             camForm.variableManager.createVariable({
                 name: 'supplierDataUrl',
                 type: 'json',

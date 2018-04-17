@@ -70,4 +70,14 @@ public class AdministratorITSystem implements Serializable {
     public void setSystem(ITDepartment system) {
         this.system = system;
     }
+
+    @Override
+    public String toString() {
+        return "AdministratorITSystem{" +
+                "adminId=" + adminId +
+                ", adminName='" + adminName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }

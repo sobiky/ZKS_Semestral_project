@@ -97,13 +97,19 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         List<String> users = new ArrayList<>();
 
         //insert IT Employee
-        User it = identityService.newUser(createNewUserName(delegateExecution.getVariable("ITWorkerLastName").toString()
-                , delegateExecution.getVariable("ITWorkerFirstName").toString(), delegateExecution));
+        //todo nejde se mi prihlasit za IT workera
+        String userNameIT = createNewUserName(delegateExecution.getVariable("ITWorkerFirstName").toString(), delegateExecution.getVariable("ITWorkerLastName").toString(), delegateExecution);
+        delegateExecution.setVariable("ITWorkerUserName",userNameIT);
+        User it = identityService.newUser(userNameIT);
         it.setEmail(delegateExecution.getVariable("ITWorkerEmail").toString());
         it.setFirstName(delegateExecution.getVariable("ITWorkerFirstName").toString());
         it.setLastName(delegateExecution.getVariable("ITWorkerLastName").toString());
         it.setPassword(NEW_PASSWORD);
         identityService.saveUser(it);
+
+        identityService.createMembership(userNameIT, "IT");
+        identityService.createTenantUserMembership(delegateExecution.getVariable("tenant").toString(), userNameIT);
+
         List<User> userListWithOutIT = userList;
         userList.add(it);
 
@@ -117,7 +123,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
 //todo pridat dalsi list bez IT pracovnika kterym to projedu
         delegateExecution.setVariable("listUsersRaw", userList);
         delegateExecution.setVariable("userListWithOutIT", userListWithOutIT);
-        delegateExecution.setVariable("sizeListUserRaw", userList.size());
+        delegateExecution.setVariable("sizeListUserRaw"     , userList.size());
         //     serialization variables
         delegateExecution.setVariable("names", Variables.objectValue(users.toArray())
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON).create());
@@ -157,17 +163,20 @@ public class CreateNewUserForEmployee implements JavaDelegate {
     }
 
     public static List<Map<String, String>> PavelMagicParser( TypedValue customer) {
-
+        LOGGER.info("/////////PARSER///////////");
         String[] userStrings = customer.getValue().toString()
                 .substring(1, customer.getValue().toString().length() - 1).split("},\\{");
         List<Map<String, String>> data = new ArrayList<>(userStrings.length);
+        LOGGER.info(Arrays.toString(userStrings));
 
         for (String userString : userStrings) {
             //[{"firstName":"dsad","lastName":"awf","email":"","group":"aefea","$$hashKey":"07S"
             String[] pairs = userString.substring(1).split("\",\"");
+            LOGGER.info(Arrays.toString(pairs));
             HashMap<String, String> map = new HashMap<>();
             for (String pair : pairs) {
                 String[] keyValue = pair.split("\":\"");
+                LOGGER.info(Arrays.toString(keyValue));
                 if (keyValue[0].startsWith("\"")) {
                     keyValue[0] = keyValue[0].substring(1);
                 }
@@ -178,6 +187,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
             }
             data.add(map);
         }
+        LOGGER.info("/////////PARSER///////////");
         return data;
     }
 

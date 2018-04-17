@@ -22,7 +22,7 @@ public class Supplier implements Serializable {
 
     public Supplier(String name, String description, String itSystem, Set<Document> documents,String tenant) {
         super();
-        this.documents = new HashSet<>();
+
         this.name = name;
         this.description = description;
         this.ItSystem = itSystem;
@@ -32,6 +32,7 @@ public class Supplier implements Serializable {
 
     public Supplier() {
         super();
+        this.documents = new HashSet<>();
     }
 
     public Integer getSupplierId() {
@@ -83,5 +84,17 @@ public class Supplier implements Serializable {
 
     public void setTenant(String tenant) {
         this.tenant = tenant;
+    }
+
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "supplierId=" + supplierId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", ItSystem='" + ItSystem + '\'' +
+                ", tenant='" + tenant + '\'' +
+                ", documents=" + documents +
+                '}';
     }
 }

@@ -14,6 +14,7 @@ public class Document implements Serializable {
     private String tenant;
     private String url;
     private String type;
+    private String hashcode;
 
     @ManyToOne
     @JoinColumn(name="supplierId")
@@ -22,7 +23,7 @@ public class Document implements Serializable {
     @Lob
     private byte[] binaryFile;
 
-    public Document(String name, String tenant, String url, String type, Supplier supplier, byte[] binaryFile) {
+    public Document(String name, String tenant, String url, String type, Supplier supplier, byte[] binaryFile,String hashcode) {
         super();
         this.name = name;
         this.tenant = tenant;
@@ -30,6 +31,7 @@ public class Document implements Serializable {
         this.type = type;
         this.supplier = supplier;
         this.binaryFile = binaryFile;
+        this.hashcode = hashcode;
     }
 
     public Document() {
@@ -91,6 +93,14 @@ public class Document implements Serializable {
         this.type = type;
     }
 
+    public String getHashcode() {
+        return hashcode;
+    }
+
+    public void setHashcode(String hashcode) {
+        this.hashcode = hashcode;
+    }
+
     @Override
     public String toString() {
 
@@ -101,6 +111,7 @@ public class Document implements Serializable {
                 ", url='" + url + '\'' +
                 ", type='" + type + '\'' +
                 ", supplier=" + supplier +
+                ", hashcode=" + hashcode +
                 ", binaryFile=" + binaryFile +
                 '}';
     }
