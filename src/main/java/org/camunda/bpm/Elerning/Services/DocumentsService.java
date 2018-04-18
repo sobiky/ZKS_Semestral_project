@@ -5,6 +5,7 @@ import org.camunda.bpm.Elerning.Model.ElectronicData;
 import org.camunda.bpm.Elerning.Model.PapperData;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 
 import javax.persistence.EntityManager;
@@ -64,7 +65,6 @@ public class DocumentsService implements JavaDelegate {
 
 
         em.getTransaction().commit();
-
         LOGGER.info("//////////////////////VARIABLES/////////////////");
         LOGGER.info(delegateExecution.getVariables().toString());
 //        if(delegateExecution.getVariable("IT_Gudeline")!=null){
@@ -79,6 +79,10 @@ public class DocumentsService implements JavaDelegate {
 //            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
 //        }else LOGGER.info("NULL POINTER");
         LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
+        User assignee = (User) delegateExecution.getVariable("assignee");
+
+        delegateExecution.setVariable("assigneeName",assignee.getId());
+        LOGGER.info(assignee.getId());
     }
 
     private void removeAllData(DelegateExecution del){

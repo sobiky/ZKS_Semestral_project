@@ -24,7 +24,7 @@ public class ViewDataService implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         // todo zatim mam tenat,files from IT ,
-        // todo zkusit to poslat rovnou a ne jen string !!!!!
+        // todo vyselektit i papirove data a zobrazit
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         Query queryDocuments = em.createQuery("select e from Document e where e.tenant = :id");
@@ -57,29 +57,29 @@ public class ViewDataService implements JavaDelegate {
 //        tady musim spojit vyzit vechny uzivatele se stejnim tenant a provazat s mou employee a vypsa
         LOGGER.info("//////////////////////VARIABLES/////////////////");
         LOGGER.info(delegateExecution.getVariables().toString());
-        LOGGER.info("//////////////////////VARIABLES-DOCUMENTS/////////////////");
-        LOGGER.info(delegateExecution.getVariable("documents").toString());
+//        LOGGER.info("//////////////////////VARIABLES-DOCUMENTS/////////////////");
+//        LOGGER.info(delegateExecution.getVariable("documents").toString());
 //        if(delegateExecution.getVariable("IT_Gudeline")!=null){
 //            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
 //        }else LOGGER.info("NULL POINTER");
         for (Document doc : resultDocuments) {
-            LOGGER.info(doc.toString());
-            LOGGER.info("///SUPP///");
+//            LOGGER.info(doc.toString());
+//            LOGGER.info("///SUPP///");
             if (doc.getSupplier() != null) {
-                LOGGER.info(doc.getSupplier().toString());
+//                LOGGER.info(doc.getSupplier().toString());
             }
         }
-        LOGGER.info("///IT ELDATA///");
+//        LOGGER.info("///IT ELDATA///");
         for (ElectronicData el : resultITsysetms) {
-            LOGGER.info(el.toString());
+//            LOGGER.info(el.toString());
         }
 
 
-        LOGGER.info("///IT Systems///");
+//        LOGGER.info("///IT Systems///");
         for (ITDepartment it : itDepartmentList) {
-            LOGGER.info(it.toString());
+//            LOGGER.info(it.toString());
         }
-        LOGGER.info("//////////////////////VARIABLES/////////////////");
+//        LOGGER.info("//////////////////////VARIABLES/////////////////");
     }
 
 

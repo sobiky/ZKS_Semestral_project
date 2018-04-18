@@ -26,6 +26,7 @@ public class SupplierService implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         //todo tohle musim udalat a ulozit data do databaze eeee
+        // todo presunout servisu z podprocesu, upravit seznamy filu a ulozit spravne file do databaze aby se neukladali jen nejake
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         em.getTransaction().begin();

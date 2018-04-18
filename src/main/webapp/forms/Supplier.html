@@ -5,37 +5,53 @@
         <script cam-script type="text/form-script">
         <!--<script>-->
             $scope.listFile = [];
-
-
-            $scope.addItem = function() {
-            $scope.listFile.push({name:''});
-            };
-
-            $scope.removeItem = function(index) {
-            $scope.listFile.splice(index, 1);
-            };
-
-
             $scope.supplierDataUrl = [];
             $scope.supplierFileName = [];
 
+
+            $scope.addItem = function () {
+                $scope.listFile.push({name: ''});
+            };
+
+            $scope.removeItem = function (index) {
+                $scope.listFile.splice(index, 1);
+            };
+            camForm.on('variables-restored', function () {
+
+                camForm.variableManager.createVariable({
+                    name: 'supplierDataUrl',
+                    type: 'json',
+                    value: $scope.supplierDataUrl
+                });
+
+                camForm.variableManager.createVariable({
+                    name: 'supplierFileName',
+                    type: 'json',
+                    value: $scope.supplierFileName
+                });
+
+            });
+
             inject(['$http', 'Uri', function ($http, Uri) {
+
+
                 camForm.on('form-loaded', function () {
                     $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
                         $scope.upload = function (nameId) {
-                            var nameId = "file"+nameId;
+
+
+                            var nameId = "file" + nameId;
 
                             $scope.inputName = document.getElementById(nameId).files[0].name + "";
                             $scope.hascode = hashCode($scope.inputName);
 
 
                             console.log(nameId);
-                            console.log( "hashcode : "+ $scope.hascode);
+                            console.log("hashcode : " + $scope.hascode);
                             console.log($scope.supplierDataUrl.length);
                             var check = false;
                             debugger;
                             for (let i = 0; i < $scope.supplierDataUrl.length; i++) {
-                                <!--console.log($scope.supplierDataUrl[i].url);-->
                                 if ($scope.supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)) {
                                     check = true;
                                     console.log("duplicita : value = " + check);
@@ -46,7 +62,7 @@
                             if (!check) {
                                 $scope.supplierDataUrl.push({
                                     name: nameId,
-                                    hashcode : $scope.hascode+"",
+                                    hashcode: $scope.hascode + "",
                                     url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)
                                 });
 
@@ -62,7 +78,7 @@
 
                                 $scope.supplierFileName.push({
                                     type: nameId,
-                                    hashcode : $scope.hascode+"",
+                                    hashcode: $scope.hascode + "",
                                     name: document.getElementById(nameId).files[0].name
                                 });
 
@@ -78,7 +94,7 @@
 
                                         var hashNameFile = "Files" + $scope.hascode;
                                         camForm.variableManager.createVariable({
-                                            name:  hashNameFile,
+                                            name: hashNameFile,
                                             type: 'File',
                                             value: btoa(
                                                 new Uint8Array(data)
@@ -94,34 +110,21 @@
 
                             }
 
-
                         };
                     });
                 });
+
+
             }]);
+
+
             function hashCode(s) {
                 let h = 0, l = s.length, i = 0;
-                if ( l > 0 )
+                if (l > 0)
                     while (i < l)
                         h = (h << 5) - h + s.charCodeAt(i++) | 0;
                 return h;
             }
-            camForm.variableManager.createVariable({
-                name: 'supplierDataUrl',
-                type: 'json',
-                value: $scope.supplierDataUrl
-            });
-
-            camForm.variableManager.createVariable({
-                name: 'supplierFileName',
-                type: 'json',
-                value: $scope.supplierFileName
-            });
-
-
-
-
-
 
 
         </script>
@@ -142,7 +145,7 @@
                 cam-choices="systemsList">
         </select>
         <br>
-            <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
+        <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
         <div ng-repeat=" i in listFile">
             <input type="file" name="file{{$index}}" id="file{{$index}}"
                    cam-max-filesize="10000000"
