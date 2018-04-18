@@ -11,13 +11,13 @@ public class PapperData implements Serializable {
     @Id
     @GeneratedValue
     private Integer ID_PapperData;
-    private String tennat;
+    private String tenant;
     private String type;
     private String place;
 
-    public PapperData(String tennat, String type, String place) {
+    public PapperData(String tenant, String type, String place) {
         super();
-        this.tennat = tennat;
+        this.tenant = tenant;
         this.type = type;
         this.place = place;
     }
@@ -33,12 +33,12 @@ public class PapperData implements Serializable {
         this.ID_PapperData = ID_PapperData;
     }
 
-    public String getTennat() {
-        return tennat;
+    public String getTenant() {
+        return tenant;
     }
 
-    public void setTennat(String tennat) {
-        this.tennat = tennat;
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 
     public String getType() {

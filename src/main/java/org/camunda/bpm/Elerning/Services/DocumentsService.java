@@ -57,7 +57,7 @@ public class DocumentsService implements JavaDelegate {
 
         if (!delegateExecution.getVariable("papper").toString().equals("")) {
             PapperData papperData = new PapperData();
-            papperData.setTennat(delegateExecution.getVariable("tenant").toString());
+            papperData.setTenant(delegateExecution.getVariable("tenant").toString());
             papperData.setType("Papper");
             papperData.setPlace(delegateExecution.getVariable("papper").toString());
             em.persist(papperData);
@@ -79,10 +79,8 @@ public class DocumentsService implements JavaDelegate {
 //            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
 //        }else LOGGER.info("NULL POINTER");
         LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
-        User assignee = (User) delegateExecution.getVariable("assignee");
 
-        delegateExecution.setVariable("assigneeName",assignee.getId());
-        LOGGER.info(assignee.getId());
+
     }
 
     private void removeAllData(DelegateExecution del){

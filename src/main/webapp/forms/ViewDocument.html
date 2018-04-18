@@ -17,6 +17,7 @@
                 camForm.variableManager.fetchVariable('documentsName');
                 camForm.variableManager.fetchVariable('documents');
                 camForm.variableManager.fetchVariable('itSystems');
+                camForm.variableManager.fetchVariable('listPappers');
 
                 camForm.variableManager.fetchVariable('tenant');
             });
@@ -30,6 +31,7 @@
                 $scope.documentsName = camForm.variableManager.variableValue('documentsName');
                 $scope.documents = JSON.parse(camForm.variableManager.variableValue('documents'));
                 $scope.itSystems = JSON.parse(camForm.variableManager.variableValue('itSystems'));
+                $scope.listPappers = JSON.parse(camForm.variableManager.variableValue('listPappers'));
                 $scope.IT_GudelineName = "default";
                 $scope.Play_backupName = "default";
                 $scope.Plan_RepairName = "default";
@@ -74,6 +76,7 @@
                 console.log($scope.supplier);
                 console.log($scope.documents);
                 console.log($scope.itSystems);
+                console.log($scope.listPappers);
                 <!--console.log(JSON.parse($scope.documents));-->
 
 
@@ -102,12 +105,7 @@
         </script>
 
 
-        <h2>Organizace : {{tenant}}
-        </h2>
-        <h3>Dokumenty</h3>
-        <!--<div ng-repeat="doc in documents">-->
-            <!--{{doc.name}}-->
-        <!--</div>-->
+        <h2>Organizace : {{tenant}}</h2>
         <h3>Dodavatele</h3>
         <!--{{supplier[0].supplier.name}}-->
         <div ng-repeat="supp in supplier">
@@ -123,8 +121,21 @@
             <hr>
         </div>
 
-
-
+        <h3>Informacni systemy s osobnimy udaji</h3>
+        <div ng-repeat="it in itSystems">
+            Nazev informacniho systemu : {{it.name}}<br>
+            Popis : {{it.description}}<br>
+            Url : {{it.url}}<br>
+            <h4>Sitove disky</h4>
+            <divd ng-repeat="disk in it.arrayNetworkDisks">
+                    {{disk.networkDisk}}<br>
+            </divd>
+            <hr>
+        </div>
+        <h3>Umisteni papirovych dat</h3>
+        <div ng-repeat="papper in listPappers">
+            Umisteni : {{papper.place}}
+        </div>
         <!--<div ng-repeat="it in itSystems">-->
         <!--{{it.name}}-->
         <!--</div>-->

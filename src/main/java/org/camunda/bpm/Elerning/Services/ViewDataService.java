@@ -1,10 +1,8 @@
 package org.camunda.bpm.Elerning.Services;
 
-import jdk.nashorn.internal.parser.JSONParser;
-import org.camunda.bpm.Elerning.Model.Document;
-import org.camunda.bpm.Elerning.Model.ElectronicData;
-import org.camunda.bpm.Elerning.Model.ITDepartment;
-import org.camunda.bpm.Elerning.Model.Supplier;
+
+
+import org.camunda.bpm.Elerning.Model.*;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.impl.util.json.JSONArray;
@@ -16,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class ViewDataService implements JavaDelegate {
@@ -32,16 +31,33 @@ public class ViewDataService implements JavaDelegate {
 //        queryDocuments.setParameter("id", "Harumaph");
         List<Document> resultDocuments = queryDocuments.getResultList();
 
+
         Query queryElektronicData = em.createQuery("select e from ElectronicData e where e.tenant = :id");
         queryElektronicData.setParameter("id", delegateExecution.getVariable("tenant"));
 //        queryElektronicData.setParameter("id", "Harumaph");
         List<ElectronicData> resultITsysetms = queryElektronicData.getResultList();
 
+        Query queryPapper = em.createQuery("select e from PapperData e where e.tenant = :id");
+        queryPapper.setParameter("id", delegateExecution.getVariable("tenant"));
+        List<PapperData> resultPappers = queryPapper.getResultList();
+
         List<ITDepartment> itDepartmentList = new ArrayList<>();
+        List<Pair> listNetworkDisk = new ArrayList<>();
         for (ElectronicData el : resultITsysetms) {
+            if (el.getNetworkDisk() != null) {
+                Pair pair = new Pair(el.getITSystem(), el.getNetworkDisk());
+                listNetworkDisk.add(pair);
+            }
+        //todo vyresit duplicity
             Query queryITdepartment = em.createQuery("select e from ITDepartment e where e.name = :name");
-            queryITdepartment.setParameter("name",el.getITSystem());
-            itDepartmentList.add((ITDepartment) queryITdepartment.getSingleResult());
+            queryITdepartment.setParameter("name", el.getITSystem());
+            ITDepartment itdepatment = (ITDepartment) queryITdepartment.getSingleResult();
+            boolean checkExist = false;
+            for (ITDepartment it:itDepartmentList) {
+                if(Objects.equals(it.getName(), itdepatment.getName())){checkExist=true;}
+            }
+            if(!checkExist){ itDepartmentList.add(itdepatment);}
+
         }
 
 //        for (ElectronicData el:resultITsysetms) {
@@ -50,10 +66,12 @@ public class ViewDataService implements JavaDelegate {
 
 
         JSONArray jsonArrayDocuments = createJsonDocuments(resultDocuments);
-        JSONArray jsonArrayITsystems = createJsonITsystems(itDepartmentList);
+        JSONArray jsonArrayITsystems = createJsonITsystems(itDepartmentList, listNetworkDisk);
+        JSONArray jsonArrayPapper = createJsonPapper(resultPappers);
 
         delegateExecution.setVariable("documents", jsonArrayDocuments.toString());
         delegateExecution.setVariable("itSystems", jsonArrayITsystems.toString());
+        delegateExecution.setVariable("listPappers", jsonArrayPapper.toString());
 //        tady musim spojit vyzit vechny uzivatele se stejnim tenant a provazat s mou employee a vypsa
         LOGGER.info("//////////////////////VARIABLES/////////////////");
         LOGGER.info(delegateExecution.getVariables().toString());
@@ -97,18 +115,36 @@ public class ViewDataService implements JavaDelegate {
         }
         return jsonArray;
     }
-    private JSONArray createJsonITsystems(List<ITDepartment> itDepartments){
+
+    private JSONArray createJsonITsystems(List<ITDepartment> itDepartments, List<Pair> electronic) {
         JSONArray jsonArray = new JSONArray();
-        for (ITDepartment it:itDepartments) {
+        for (ITDepartment it : itDepartments) {
             JSONObject jso = new JSONObject();
-            jso.put("name",it.getName());
-            jso.put("description",it.getDescription());
-            jso.put("url",it.getUrl());
-        jsonArray.put(jso);
+            jso.put("name", it.getName());
+            jso.put("description", it.getDescription());
+            jso.put("url", it.getUrl());
+            JSONArray jsonArrayNetworkDisk = new JSONArray();
+            for (Pair pair : electronic) {
+                if (Objects.equals(pair.getKey(), it.getName())) {
+                    JSONObject networkDisk = new JSONObject();
+                    networkDisk.put("networkDisk", pair.getValue());
+                    jsonArrayNetworkDisk.put(networkDisk);
+                }
+            }
+            jso.put("arrayNetworkDisks",jsonArrayNetworkDisk);
+            jsonArray.put(jso);
         }
         return jsonArray;
     }
-
+    private  JSONArray createJsonPapper(List<PapperData> resultPappers){
+        JSONArray jsonArray = new JSONArray();
+        for (PapperData papper:resultPappers) {
+            JSONObject jso = new JSONObject();
+            jso.put("place",papper.getPlace());
+            jsonArray.put(jso);
+        }
+        return jsonArray;
+    }
     private JSONObject parserSupplier(Supplier supplier) {
         JSONObject js = new JSONObject();
         js.put("name", supplier.getName());
