@@ -26,6 +26,7 @@ public class ITDepartmentService implements JavaDelegate {
         LOGGER.info("---------VARIABLES---------");
         LOGGER.info(delegateExecution.getVariable("listInformationSystem").toString());
         TypedValue itDepartments = delegateExecution.getVariableTyped("listInformationSystem");
+        if (!Objects.equals(itDepartments.getValue().toString(), "[]")) {
         List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(itDepartments);
         for (Map<String, String> item : data) {
 
@@ -66,6 +67,7 @@ public class ITDepartmentService implements JavaDelegate {
             for (Map.Entry<String, String> pair : item.entrySet()) {
                 LOGGER.info("/" + pair.getKey() + " >>> " + pair.getValue());
             }
+        }
         }
         em.close();
         ef.close();

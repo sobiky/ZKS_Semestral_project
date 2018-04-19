@@ -25,24 +25,25 @@ public class SupplierService implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        //todo tohle musim udalat a ulozit data do databaze eeee
-        // todo presunout servisu z podprocesu, upravit seznamy filu a ulozit spravne file do databaze aby se neukladali jen nejake
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         em.getTransaction().begin();
+        if(delegateExecution.getVariable("supplierName")!=null){
         Supplier supplier = new Supplier();
-
+        //todo treba tohle udelat pro list supplieru a ne jen pro jednoho
         supplier.setName(delegateExecution.getVariable("supplierName").toString());
         supplier.setTenant(delegateExecution.getVariable("tenant").toString());
         supplier.setDescription(delegateExecution.getVariable("supplierDescription").toString());
-        supplier.setItSystem(delegateExecution.getVariable("supplierITSystem").toString());
-
+        if(delegateExecution.getVariable("supplierITSystem")!=null) {
+            supplier.setItSystem(delegateExecution.getVariable("supplierITSystem").toString());
+        }
         //todo je treba jeste udelat ukladani dokumentu supleireru  eeee
         TypedValue fileData = delegateExecution.getVariableTyped("supplierDataUrl");
         TypedValue fileName = delegateExecution.getVariableTyped("supplierFileName");
         LOGGER.info("ALL DATA");
         LOGGER.info(delegateExecution.getVariables().toString());
         LOGGER.info("ALL DATA");
+
         if (!Objects.equals(fileData.getValue().toString(), "[]")) {
         List<Map<String, String>> dataName = CreateNewUserForEmployee.PavelMagicParser(fileName);
         List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(fileData);
@@ -61,6 +62,7 @@ public class SupplierService implements JavaDelegate {
         em.persist(supplier);
         em.getTransaction().commit();
         removeData(delegateExecution);
+        }
     }
 
     private void removeData(DelegateExecution del){

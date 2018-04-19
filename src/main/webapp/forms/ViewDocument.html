@@ -126,10 +126,17 @@
             Nazev informacniho systemu : {{it.name}}<br>
             Popis : {{it.description}}<br>
             Url : {{it.url}}<br>
+
             <h4>Sitove disky</h4>
             <divd ng-repeat="disk in it.arrayNetworkDisks">
                     {{disk.networkDisk}}<br>
             </divd>
+
+            <h4>Administrator IT systemu</h4>
+            <div ng-repeat="admin in it.arrayAdmins">
+                Jmeno : {{admin.name}}, Email : {{admin.email}} , Telefon : {{admin.phone}}
+            </div>
+
             <hr>
         </div>
         <h3>Umisteni papirovych dat</h3>
@@ -185,6 +192,8 @@
             </a>
             <br>
         </div>
+        <h3>Organizacni struktura</h3>
+        -----TBA-----
 
 
         <!--<a href="/engine-rest/task/{{camForm.taskId}}/variables/uploadedFile1/data" role="button">-->

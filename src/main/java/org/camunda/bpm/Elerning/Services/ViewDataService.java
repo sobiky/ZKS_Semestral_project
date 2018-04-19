@@ -123,6 +123,16 @@ public class ViewDataService implements JavaDelegate {
             jso.put("name", it.getName());
             jso.put("description", it.getDescription());
             jso.put("url", it.getUrl());
+            JSONArray arrayAdmin = new JSONArray();
+            for (AdministratorITSystem adm:it.getAdmin()) {
+                JSONObject admin = new JSONObject();
+                admin.put("name",adm.getAdminName());
+                admin.put("email",adm.getEmail());
+                admin.put("phone",adm.getPhone());
+                arrayAdmin.put(admin);
+            }
+            jso.put("arrayAdmins",arrayAdmin);
+
             JSONArray jsonArrayNetworkDisk = new JSONArray();
             for (Pair pair : electronic) {
                 if (Objects.equals(pair.getKey(), it.getName())) {

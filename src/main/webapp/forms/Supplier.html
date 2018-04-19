@@ -1,8 +1,52 @@
 <form name="Supplier">
     <!--//todo dodelat lepsi kontrolu duplicity dokumentu-->
     <div class="form-group">
-
-        <script cam-script type="text/form-script">
+        <label>Mate dodatatele</label>
+        <input type="checkbox"
+               cam-variable-name="supplierCheckbox"
+               cam-variable-type="Boolean"/>
+        <br>
+        <div ng-show="supplierCheckbox">
+            <label>Jmeno Dodavatele</label>
+            <input type="text"
+                   cam-variable-name="supplierName"
+                   cam-variable-type="String"/>
+            <br>
+            <label>Popis o co se stara</label>
+            <input type="text"
+                   cam-variable-name="supplierDescription"
+                   cam-variable-type="String"/>
+            <br>
+            <label>Pristup do IT systemu </label>
+            <select
+                    cam-variable-name="supplierITSystem"
+                    cam-variable-type="String"
+                    cam-choices="systemsList">
+            </select>
+            <br>
+            <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
+            <div ng-repeat=" i in listFile">
+                <input type="file" name="file{{$index}}" id="file{{$index}}"
+                       cam-max-filesize="10000000"
+                       accept="application/pdf"
+                       style="display:inline"
+                />
+                <button ng-click="upload($index)">Upload</button>
+                <button class="btn btn-default" ng-click="removeItem($index)">
+                    <span class="glyphicon glyphicon-minus"></span>
+                </button>
+            </div>
+            <button class="btn btn-default" ng-click="addItem()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <br>
+            /// tlacitko s pridat dalsi dodavatele
+            <button class="btn btn-default">
+                Pridat dalsi dodavatele
+            </button>
+        </div>
+    </div>
+    <script cam-script type="text/form-script">
         <!--<script>-->
             $scope.listFile = [];
             $scope.supplierDataUrl = [];
@@ -127,38 +171,6 @@
             }
 
 
-        </script>
-        <label>Jmeno Dodavatele</label>
-        <input type="text"
-               cam-variable-name="supplierName"
-               cam-variable-type="String"/>
-        <br>
-        <label>Popis o co se stara</label>
-        <input type="text"
-               cam-variable-name="supplierDescription"
-               cam-variable-type="String"/>
-        <br>
-        <label>Pristup do IT systemu </label>
-        <select
-                cam-variable-name="supplierITSystem"
-                cam-variable-type="String"
-                cam-choices="systemsList">
-        </select>
-        <br>
-        <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
-        <div ng-repeat=" i in listFile">
-            <input type="file" name="file{{$index}}" id="file{{$index}}"
-                   cam-max-filesize="10000000"
-                   accept="application/pdf"
-                   style="display:inline"
-            />
-            <button ng-click="upload($index)">Upload</button>
-            <button class="btn btn-default" ng-click="removeItem($index)">
-                <span class="glyphicon glyphicon-minus"></span>
-            </button>
-        </div>
-        <button class="btn btn-default" ng-click="addItem()">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-    </div>
+
+    </script>
 </form>

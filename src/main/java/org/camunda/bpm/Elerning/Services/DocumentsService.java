@@ -87,5 +87,7 @@ public class DocumentsService implements JavaDelegate {
         del.removeVariable("networkDisk");
         del.removeVariable("systemItem");
         del.removeVariable("papper");
+        del.removeVariable("electronic");
+        del.removeVariable("papperCheck");
     }
 }
