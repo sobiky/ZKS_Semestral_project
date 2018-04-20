@@ -5,8 +5,8 @@
         <!--<a cam-file-download="IT_Gudeline"></a>-->
 
 
-        <script cam-script type="text/form-script">
-        <!--<script>-->
+        <!--<script cam-script type="text/form-script">-->
+        <script>
             camForm.on('form-loaded', function () {
                 camForm.variableManager.fetchVariable('IT_Gudeline');
                 camForm.variableManager.fetchVariable('Play_backup');
@@ -18,6 +18,7 @@
                 camForm.variableManager.fetchVariable('documents');
                 camForm.variableManager.fetchVariable('itSystems');
                 camForm.variableManager.fetchVariable('listPappers');
+                camForm.variableManager.fetchVariable('listAllUsers');
 
                 camForm.variableManager.fetchVariable('tenant');
             });
@@ -32,6 +33,10 @@
                 $scope.documents = JSON.parse(camForm.variableManager.variableValue('documents'));
                 $scope.itSystems = JSON.parse(camForm.variableManager.variableValue('itSystems'));
                 $scope.listPappers = JSON.parse(camForm.variableManager.variableValue('listPappers'));
+                $scope.listAllUsers = JSON.parse(camForm.variableManager.variableValue('listAllUsers'));
+
+
+
                 $scope.IT_GudelineName = "default";
                 $scope.Play_backupName = "default";
                 $scope.Plan_RepairName = "default";
@@ -55,7 +60,7 @@
                         }
                         pushFileToSupplier($scope.documents[i],$scope.supplier)
                     }
-                    console.log($scope.documents[i].name);
+                    <!--console.log($scope.documents[i].name);-->
                     if ($scope.documents[i].type === "IT_Gudeline") {
                         $scope.IT_GudelineName = $scope.documents[i].name;
                     }
@@ -77,6 +82,7 @@
                 console.log($scope.documents);
                 console.log($scope.itSystems);
                 console.log($scope.listPappers);
+                console.log($scope.listAllUsers);
                 <!--console.log(JSON.parse($scope.documents));-->
 
 
@@ -129,12 +135,12 @@
 
             <h4>Sitove disky</h4>
             <divd ng-repeat="disk in it.arrayNetworkDisks">
-                    {{disk.networkDisk}}<br>
+                <b>Disk</b> : {{disk.networkDisk}}<br>
             </divd>
 
             <h4>Administrator IT systemu</h4>
             <div ng-repeat="admin in it.arrayAdmins">
-                Jmeno : {{admin.name}}, Email : {{admin.email}} , Telefon : {{admin.phone}}
+                <b>Jmeno</b> : {{admin.name}}, <b>Email</b> : {{admin.email}} ,<b> Telefon </b> : {{admin.phone}}
             </div>
 
             <hr>
@@ -193,6 +199,11 @@
             <br>
         </div>
         <h3>Organizacni struktura</h3>
+        <div ng-repeat="user in listAllUsers">
+            <b>Jmeno : </b> {{user.firstName}}, <b>Primeni : </b> {{user.lastName}}, <b>Email : </b> {{user.email}}, <b ng-show="user.department">Oddeleni</b> {{user.department}}
+
+
+        </div>
         -----TBA-----
 
 

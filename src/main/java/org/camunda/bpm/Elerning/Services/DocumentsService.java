@@ -28,16 +28,53 @@ public class DocumentsService implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
 
-        //todo najist moznost jak pouzit POST methodu k tomu abych nahral soubor do promenenne
-        //todo najit jak napsat a provazat script abych mohl pouzit Angulari post
-        //todo vyresit problem s nahrati souboru najak posilat nazev souboru........
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
+        em.getTransaction().begin();
         TypedValue itDepartments = delegateExecution.getVariableTyped("camundaDataUrl");
+        TypedValue pappersData = delegateExecution.getVariableTyped("listPappers");
+        TypedValue electronicsData = delegateExecution.getVariableTyped("listElectronic");
+
+        if (!Objects.equals(pappersData.getValue().toString(), "[]")) {
+            List<Map<String, String>> pappersList = CreateNewUserForEmployee.PavelMagicParser(pappersData);
+            for (Map<String, String> item : pappersList) {
+                PapperData papperData = new PapperData();
+                papperData.setTenant(delegateExecution.getVariable("tenant").toString());
+                papperData.setType("Papper");
+                papperData.setPlace(item.get("place"));
+                em.persist(papperData);
+
+            }
+
+        }
+        if (!Objects.equals(electronicsData.getValue().toString(), "[]")) {
+            List<Map<String, String>> electroDataList = CreateNewUserForEmployee.PavelMagicParser(electronicsData);
+            LOGGER.info("//////////////////////LIST/////////////////");
+            for (Map<String, String> item : electroDataList) {
+                for (Map.Entry<String, String> pair : item.entrySet()) {
+                    LOGGER.info("/" + pair.getKey() + " >>> " + pair.getValue());
+                }
+
+            }
+            LOGGER.info("//////////////////////LIST/////////////////");
+
+            for (Map<String, String> item : electroDataList) {
+                ElectronicData electronicData = new ElectronicData();
+                electronicData.setTenant(delegateExecution.getVariable("tenant").toString());
+                if (!item.get("networkDisk").equals("")) {
+                    electronicData.setNetworkDisk(item.get("networkDisk"));
+                }
+                electronicData.setType("Elektronic");
+                electronicData.setITSystem(item.get("systemItem"));
+                em.persist(electronicData);
+            }
+
+
+        }
+
         if (!Objects.equals(itDepartments.getValue().toString(), "[]")) {
             List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(itDepartments);
 
-            //todo mam data ktere chci poslat do databaze.
             for (Map<String, String> item : data) {
                 for (Map.Entry<String, String> pair : item.entrySet()) {
                     LOGGER.info("/" + pair.getKey() + " >>> " + pair.getValue());
@@ -45,45 +82,20 @@ public class DocumentsService implements JavaDelegate {
 
             }
         }
-        em.getTransaction().begin();
-        if (!delegateExecution.getVariable("networkDisk").toString().equals("")) {
-            ElectronicData electronicData = new ElectronicData();
-            electronicData.setTenant(delegateExecution.getVariable("tenant").toString());
-            electronicData.setNetworkDisk(delegateExecution.getVariable("networkDisk").toString());
-            electronicData.setType("Elektronic");
-            electronicData.setITSystem(delegateExecution.getVariable("systemItem").toString());
-            em.persist(electronicData);
-        }
-
-        if (!delegateExecution.getVariable("papper").toString().equals("")) {
-            PapperData papperData = new PapperData();
-            papperData.setTenant(delegateExecution.getVariable("tenant").toString());
-            papperData.setType("Papper");
-            papperData.setPlace(delegateExecution.getVariable("papper").toString());
-            em.persist(papperData);
-        }
-
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
+        LOGGER.info(delegateExecution.getVariables().toString());
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
 
         em.getTransaction().commit();
-        LOGGER.info("//////////////////////VARIABLES/////////////////");
-        LOGGER.info(delegateExecution.getVariables().toString());
-//        if(delegateExecution.getVariable("IT_Gudeline")!=null){
-//            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
-//        }else LOGGER.info("NULL POINTER");
-        LOGGER.info("//////////////////////VARIABLES/////////////////");
+//        LOGGER.info("//////////////////////VARIABLES/////////////////");
+//        LOGGER.info(delegateExecution.getVariables().toString());
+//        LOGGER.info("//////////////////////VARIABLES/////////////////");
         removeAllData(delegateExecution);
-
-        LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
-        LOGGER.info(delegateExecution.getVariables().toString());
-//        if(delegateExecution.getVariable("IT_Gudeline")!=null){
-//            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
-//        }else LOGGER.info("NULL POINTER");
-        LOGGER.info("///////////////VARIABLES --- REMOVE /////////////////");
 
 
     }
 
-    private void removeAllData(DelegateExecution del){
+    private void removeAllData(DelegateExecution del) {
         del.removeVariable("networkDisk");
         del.removeVariable("systemItem");
         del.removeVariable("papper");

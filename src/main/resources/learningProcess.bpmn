@@ -45,7 +45,7 @@
     <bpmn:userTask id="SelectedUser" name="View all employee" camunda:formKey="embedded:app:forms/SelectedUser.html" camunda:assignee="manager">
       <bpmn:documentation>user: manager pass: manager1</bpmn:documentation>
       <bpmn:incoming>SequenceFlow_08pd63m</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_15f1xhk</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0osvb5b</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_08pd63m" sourceRef="Task_1du9shf" targetRef="SelectedUser" />
     <bpmn:subProcess id="SubProcess_16fun59" name="Elerning">
@@ -124,7 +124,7 @@
     <bpmn:userTask id="Task_1lw7a24" name="Define all inf.system" camunda:formKey="embedded:app:forms/DefineAllInformationSystem.html" camunda:assignee="${ITWorkerUserName}" camunda:candidateGroups="IT">
       <bpmn:incoming>SequenceFlow_1osb967</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_17j2sfb</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_15f1xhk</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0osvb5b</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0n0xife</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_0n0xife" sourceRef="Task_1lw7a24" targetRef="Task_06j04fs" />
@@ -179,7 +179,6 @@
       <bpmn:incoming>SequenceFlow_0rk2iad</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1bgwqze</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_15f1xhk" sourceRef="SelectedUser" targetRef="Task_1lw7a24" />
     <bpmn:sequenceFlow id="SequenceFlow_17j2sfb" sourceRef="Task_1bf1k69" targetRef="Task_1lw7a24" />
     <bpmn:sequenceFlow id="SequenceFlow_1osb967" sourceRef="SubProcess_16fun59" targetRef="Task_1lw7a24" />
     <bpmn:sequenceFlow id="SequenceFlow_0o6q8q2" sourceRef="SubProcess_0k388um" targetRef="ServiceTask_1e0b6hx" />
@@ -231,6 +230,7 @@
       <bpmn:incoming>SequenceFlow_0996hjx</bpmn:incoming>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1ugtvzv" sourceRef="StartEvent_1" targetRef="Task_1du9shf" />
+    <bpmn:sequenceFlow id="SequenceFlow_0osvb5b" sourceRef="SelectedUser" targetRef="Task_1lw7a24" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ElearningProcess">
@@ -529,15 +529,6 @@
       <bpmndi:BPMNShape id="ServiceTask_1ecd210_di" bpmnElement="Task_0a3oy0h">
         <dc:Bounds x="992" y="646" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_15f1xhk_di" bpmnElement="SequenceFlow_15f1xhk">
-        <di:waypoint xsi:type="dc:Point" x="379" y="209" />
-        <di:waypoint xsi:type="dc:Point" x="396" y="209" />
-        <di:waypoint xsi:type="dc:Point" x="396" y="206" />
-        <di:waypoint xsi:type="dc:Point" x="514" y="686" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="366" y="201.5" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_17j2sfb_di" bpmnElement="SequenceFlow_17j2sfb">
         <di:waypoint xsi:type="dc:Point" x="462" y="246" />
         <di:waypoint xsi:type="dc:Point" x="462" y="288" />
@@ -644,6 +635,15 @@
         <di:waypoint xsi:type="dc:Point" x="149" y="209" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="130" y="188" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0osvb5b_di" bpmnElement="SequenceFlow_0osvb5b">
+        <di:waypoint xsi:type="dc:Point" x="379" y="209" />
+        <di:waypoint xsi:type="dc:Point" x="448" y="209" />
+        <di:waypoint xsi:type="dc:Point" x="448" y="686" />
+        <di:waypoint xsi:type="dc:Point" x="516" y="686" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="463" y="441.5" width="0" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

@@ -57,4 +57,14 @@ public class Employee implements Serializable {
     public void setTenant(String tenant) {
         this.tenant = tenant;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employee_Id=" + employee_Id +
+                ", department='" + department + '\'' +
+                ", userName='" + userName + '\'' +
+                ", tenant='" + tenant + '\'' +
+                '}';
+    }
 }
