@@ -1,5 +1,6 @@
 <form name="Supplier">
     <!--//todo dodelat lepsi kontrolu duplicity dokumentu-->
+    <!--//todo dodelat vice dodavatelu-->
     <div class="form-group">
         <label>Mate dodatatele</label>
         <input type="checkbox"
@@ -7,168 +8,197 @@
                cam-variable-type="Boolean"/>
         <br>
         <div ng-show="supplierCheckbox">
-            <label>Jmeno Dodavatele</label>
-            <input type="text"
-                   cam-variable-name="supplierName"
-                   cam-variable-type="String"/>
-            <br>
-            <label>Popis o co se stara</label>
-            <input type="text"
-                   cam-variable-name="supplierDescription"
-                   cam-variable-type="String"/>
-            <br>
-            <label>Pristup do IT systemu </label>
-            <select
+            <select hidden
                     cam-variable-name="supplierITSystem"
                     cam-variable-type="String"
                     cam-choices="systemsList">
             </select>
+            <div ng-repeat="s in suppliersList" ng-init="parentIndex = $index">
+
+                <label>Jmeno Dodavatele</label>
+                <input type="text"
+                       cam-variable-name="s.supplierName"
+                       cam-variable-type="String"/>
+                <br>
+                <label>Popis o co se stara</label>
+                <input type="text"
+                       cam-variable-name="s.supplierDescription"
+                       cam-variable-type="String"/>
+                <br>
+                <label>Pristup do IT systemu </label>
+                <select ng-model="s.supplierITSystem">
+                    <option value="" >vyberte</option>
+                    <option ng-repeat="item in s.listSystemsLists" value="{{item}}">{{item}}</option>
+                </select>
+
             <br>
-            <h3>Upload smuluv</h3>//tady bude dalsi upload smluv RIP :|
-            <div ng-repeat=" i in listFile">
-                <input type="file" name="file{{$index}}" id="file{{$index}}"
+            <h3>Upload smuluv</h3>
+            <div ng-repeat=" i in s.listFile">
+                <input type="file" name="parent{{$parent.$index}}file{{$index}}" id="parent{{$parent.$index}}file{{$index}}"
                        cam-max-filesize="10000000"
                        accept="application/pdf"
                        style="display:inline"
                 />
-                <button ng-click="upload($index)">Upload</button>
+                <button ng-click="upload($index,$parent.$index)">Upload</button>
                 <button class="btn btn-default" ng-click="removeItem($index)">
                     <span class="glyphicon glyphicon-minus"></span>
                 </button>
             </div>
-            <button class="btn btn-default" ng-click="addItem()">
+            <button class="btn btn-default" ng-click="addItem($index)">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
             <br>
+                <hr>
+            </div>
             /// tlacitko s pridat dalsi dodavatele
-            <button class="btn btn-default">
+            <button class="btn btn-default" ng-click="addSupplier(systemsList)">
                 Pridat dalsi dodavatele
             </button>
         </div>
     </div>
     <script cam-script type="text/form-script">
-        <!--<script>-->
-            $scope.listFile = [];
-            $scope.supplierDataUrl = [];
-            $scope.supplierFileName = [];
+    <!--<script>-->
+        $scope.suppliersList = [];
+        $scope.listFile = [];
+        $scope.supplierDataUrl = [];
+        $scope.supplierFileName = [];
+
+        $scope.addSupplier = function(systemsList){
+            $scope.suppliersList.push({
+                supplierName:'',
+                supplierDescription:'',
+                supplierITSystem:'',
+                listSystemsLists:systemsList,
+                listFile:[],
+                supplierDataUrl:[],
+                supplierFileName:[]
+            });
+        console.log($scope.suppliersList);
+        };
 
 
-            $scope.addItem = function () {
-                $scope.listFile.push({name: ''});
-            };
+        $scope.addItem = function (index) {
 
-            $scope.removeItem = function (index) {
-                $scope.listFile.splice(index, 1);
-            };
-            camForm.on('variables-restored', function () {
+            $scope.suppliersList[index].listFile.push({name: ''});
+        };
 
-                camForm.variableManager.createVariable({
-                    name: 'supplierDataUrl',
-                    type: 'json',
-                    value: $scope.supplierDataUrl
-                });
-
-                camForm.variableManager.createVariable({
-                    name: 'supplierFileName',
-                    type: 'json',
-                    value: $scope.supplierFileName
-                });
-
+        $scope.removeItem = function (index) {
+            $scope.listFile.splice(index, 1);
+        };
+        camForm.on('variables-restored', function () {
+            $scope.systemsList = camForm.variableManager.variableValue('systemsList');
+            camForm.variableManager.createVariable({
+                name: 'supplierDataUrl',
+                type: 'json',
+                value: $scope.supplierDataUrl
             });
 
-            inject(['$http', 'Uri', function ($http, Uri) {
+            camForm.variableManager.createVariable({
+                name: 'supplierFileName',
+                type: 'json',
+                value: $scope.supplierFileName
+            });
+            camForm.variableManager.createVariable({
+                name: 'suppliersList',
+                type: 'json',
+                value: $scope.suppliersList
+            });
+        });
+
+        inject(['$http', 'Uri', function ($http, Uri) {
 
 
-                camForm.on('form-loaded', function () {
-                    $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
-                        $scope.upload = function (nameId) {
+            camForm.on('form-loaded', function () {
+                $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
+                    $scope.upload = function (nameId,parentID) {
+                        debugger;
+
+                        var nameId = "parent"+parentID+"file" + nameId;
+
+                        $scope.inputName = document.getElementById(nameId).files[0].name + "";
+                        $scope.hascode = hashCode($scope.inputName);
 
 
-                            var nameId = "file" + nameId;
+                        console.log(nameId);
+                        console.log("hashcode : " + $scope.hascode);
+                        console.log($scope.supplierDataUrl.length);
+                        var check = false;
+                        debugger;
+                        for (let i = 0; i < $scope.suppliersList[parentID].supplierDataUrl.length; i++) {
+                            if (scope.suppliersList[parentID].supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)) {
+                                check = true;
+                                console.log("duplicita : value = " + check);
+                                break;
+                            }
+                        }
 
-                            $scope.inputName = document.getElementById(nameId).files[0].name + "";
-                            $scope.hascode = hashCode($scope.inputName);
+                        if (!check) {
+                            scope.suppliersList[parentID].supplierDataUrl.push({
+                                name: nameId,
+                                hashcode: $scope.hascode + "",
+                                url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)
+                            });
 
 
-                            console.log(nameId);
-                            console.log("hashcode : " + $scope.hascode);
-                            console.log($scope.supplierDataUrl.length);
-                            var check = false;
-                            debugger;
-                            for (let i = 0; i < $scope.supplierDataUrl.length; i++) {
-                                if ($scope.supplierDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)) {
-                                    check = true;
-                                    console.log("duplicita : value = " + check);
-                                    break;
-                                }
+                            <!--document.getElementsByName(nameId)[0].value = $scope.inputName;-->
+                            var formData = new FormData();
+                            formData.append('data', document.getElementById(nameId).files[0]);
+                            $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode + '/data'), formData, {
+                                transformRequest: angular.identity,
+                                headers: {'Content-Type': undefined}
+                            });
+
+
+                            scope.suppliersList[parentID].supplierFileName.push({
+                                type: nameId,
+                                hashcode: $scope.hascode + "",
+                                name: document.getElementById(nameId).files[0].name
+                            });
+
+
+                            var fileList = document.getElementById(nameId).files;
+                            console.log(fileList);
+                            var fileReader = new FileReader();
+                            fileReader.readAsArrayBuffer(fileList[0]);
+                            if (fileReader && fileList && fileList.length) {
+                                fileReader.onload = function () {
+                                    var data = fileReader.result;
+                                    console.log(camForm);
+
+                                    var hashNameFile = "Files" + $scope.hascode;
+                                    camForm.variableManager.createVariable({
+                                        name: hashNameFile,
+                                        type: 'File',
+                                        value: btoa(
+                                            new Uint8Array(data)
+                                                .reduce((data, byte) => data + String.fromCharCode(byte), '')),
+                                        valueInfo: {
+                                            filename: document.getElementById(nameId).files[0].name
+                                        }
+                                    });
+
+                                };
                             }
 
-                            if (!check) {
-                                $scope.supplierDataUrl.push({
-                                    name: nameId,
-                                    hashcode: $scope.hascode + "",
-                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode)
-                                });
 
+                        }
 
-                                <!--document.getElementsByName(nameId)[0].value = $scope.inputName;-->
-                                var formData = new FormData();
-                                formData.append('data', document.getElementById(nameId).files[0]);
-                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + $scope.hascode + '/data'), formData, {
-                                    transformRequest: angular.identity,
-                                    headers: {'Content-Type': undefined}
-                                });
-
-
-                                $scope.supplierFileName.push({
-                                    type: nameId,
-                                    hashcode: $scope.hascode + "",
-                                    name: document.getElementById(nameId).files[0].name
-                                });
-
-
-                                var fileList = document.getElementById(nameId).files;
-                                console.log(fileList);
-                                var fileReader = new FileReader();
-                                fileReader.readAsArrayBuffer(fileList[0]);
-                                if (fileReader && fileList && fileList.length) {
-                                    fileReader.onload = function () {
-                                        var data = fileReader.result;
-                                        console.log(camForm);
-
-                                        var hashNameFile = "Files" + $scope.hascode;
-                                        camForm.variableManager.createVariable({
-                                            name: hashNameFile,
-                                            type: 'File',
-                                            value: btoa(
-                                                new Uint8Array(data)
-                                                    .reduce((data, byte) => data + String.fromCharCode(byte), '')),
-                                            valueInfo: {
-                                                filename: document.getElementById(nameId).files[0].name
-                                            }
-                                        });
-
-                                    };
-                                }
-
-
-                            }
-
-                        };
-                    });
+                    };
                 });
+            });
 
 
-            }]);
+        }]);
 
 
-            function hashCode(s) {
-                let h = 0, l = s.length, i = 0;
-                if (l > 0)
-                    while (i < l)
-                        h = (h << 5) - h + s.charCodeAt(i++) | 0;
-                return h;
-            }
+        function hashCode(s) {
+            let h = 0, l = s.length, i = 0;
+            if (l > 0)
+                while (i < l)
+                    h = (h << 5) - h + s.charCodeAt(i++) | 0;
+            return h;
+        }
+
 
 
 

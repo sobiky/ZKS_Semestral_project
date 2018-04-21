@@ -1,15 +1,18 @@
 package org.camunda.bpm.Elerning.Services;
 
+
 import org.camunda.bpm.Elerning.CreateNewUserForEmployee;
 import org.camunda.bpm.Elerning.Model.Document;
 import org.camunda.bpm.Elerning.Model.Supplier;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.variable.value.TypedValue;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Lob;
 import javax.persistence.Persistence;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,51 +31,107 @@ public class SupplierService implements JavaDelegate {
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
         em.getTransaction().begin();
-        if(delegateExecution.getVariable("supplierName")!=null){
-        Supplier supplier = new Supplier();
-        //todo treba tohle udelat pro list supplieru a ne jen pro jednoho
-        supplier.setName(delegateExecution.getVariable("supplierName").toString());
-        supplier.setTenant(delegateExecution.getVariable("tenant").toString());
-        supplier.setDescription(delegateExecution.getVariable("supplierDescription").toString());
-        if(delegateExecution.getVariable("supplierITSystem")!=null) {
-            supplier.setItSystem(delegateExecution.getVariable("supplierITSystem").toString());
-        }
-        //todo je treba jeste udelat ukladani dokumentu supleireru  eeee
-        TypedValue fileData = delegateExecution.getVariableTyped("supplierDataUrl");
-        TypedValue fileName = delegateExecution.getVariableTyped("supplierFileName");
-        LOGGER.info("ALL DATA");
+
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
         LOGGER.info(delegateExecution.getVariables().toString());
-        LOGGER.info("ALL DATA");
+        LOGGER.info("//////////////////////VARIABLES/////////////////");
+        TypedValue suppliersList = delegateExecution.getVariableTyped("suppliersList");
 
-        if (!Objects.equals(fileData.getValue().toString(), "[]")) {
-        List<Map<String, String>> dataName = CreateNewUserForEmployee.PavelMagicParser(fileName);
-        List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(fileData);
-        LOGGER.info(data.toArray().toString());
-        LOGGER.info(dataName.toArray().toString());
-            List<Document> documents = new LinkedList<>();
 
-            documents = fileUploadToDatabase(delegateExecution,data,dataName);
-            for (Document doc :documents) {
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(suppliersList.getValue().toString());
+        JSONArray array = (JSONArray) obj;
+
+        LOGGER.info("//////////////////////JSONPARSER/////////////////");
+        LOGGER.info(array.toJSONString());
+        LOGGER.info(array.toString());
+        LOGGER.info("//////////////////////JSONPARSER-ARRAY/////////////////");
+//        List<Document> documents = new LinkedList<>();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject obje = (JSONObject) array.get(i);
+
+            Supplier supplier = new Supplier();
+            LOGGER.info((String) obje.get("supplierITSystem"));
+            supplier.setItSystem((String) obje.get("supplierITSystem"));
+            supplier.setTenant(delegateExecution.getVariable("tenant").toString());
+            supplier.setName((String) obje.get("supplierName"));
+            supplier.setDescription((String) obje.get("supplierDescription"));
+
+            JSONArray arraySingleDocument = (JSONArray) obje.get("supplierDataUrl");
+            for (int j = 0; j < arraySingleDocument.size(); j++) {
+                Document doc = new Document();
+                JSONObject ob = (JSONObject) arraySingleDocument.get(j);
+                doc.setHashcode((String) ob.get("hashcode"));
+                doc.setUrl((String) ob.get("url"));
+                JSONArray namelist = (JSONArray) obje.get("supplierFileName");
+                JSONObject name = (JSONObject) namelist.get(j);
+                doc.setName((String) name.get("name"));
+                doc.setType((String) name.get("type"));
+                doc.setTenant(delegateExecution.getVariable("tenant").toString());
+
+                ByteArrayInputStream bais =
+                        (ByteArrayInputStream) delegateExecution.getVariable("Files" + doc.getHashcode());
+
+                byte[] bytes = new byte[bais.available()];
+                bais.read(bytes);
+                doc.setBinaryFile(bytes);
                 doc.setSupplier(supplier);
                 em.persist(doc);
                 supplier.addDocuments(doc);
+
+
             }
+            em.persist(supplier);
+        }
+            em.getTransaction().commit();
+        LOGGER.info("//////////////////////JSONPARSER-ARRAY/////////////////");
 
-        }
-        em.persist(supplier);
-        em.getTransaction().commit();
-        removeData(delegateExecution);
-        }
+
+//        Supplier supplier = new Supplier();
+        //todo treba tohle udelat pro list supplieru a ne jen pro jednoho
+//        supplier.setName(delegateExecution.getVariable("supplierName").toString());
+//        supplier.setTenant(delegateExecution.getVariable("tenant").toString());
+//        supplier.setDescription(delegateExecution.getVariable("supplierDescription").toString());
+//        if (delegateExecution.getVariable("supplierITSystem") != null) {
+//            supplier.setItSystem(delegateExecution.getVariable("supplierITSystem").toString());
+//        }
+        //todo je treba jeste udelat ukladani dokumentu supleireru  eeee
+//        TypedValue fileData = delegateExecution.getVariableTyped("supplierDataUrl");
+//        TypedValue fileName = delegateExecution.getVariableTyped("supplierFileName");
+//        LOGGER.info("ALL DATA");
+//        LOGGER.info(delegateExecution.getVariables().toString());
+//        LOGGER.info("ALL DATA");
+
+//        if (!Objects.equals(fileData.getValue().toString(), "[]")) {
+//            List<Map<String, String>> dataName = CreateNewUserForEmployee.PavelMagicParser(fileName);
+//            List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(fileData);
+//            LOGGER.info(data.toArray().toString());
+//            LOGGER.info(dataName.toArray().toString());
+//            List<Document> documents = new LinkedList<>();
+//
+//            documents = fileUploadToDatabase(delegateExecution, data, dataName);
+//            for (Document doc : documents) {
+//                doc.setSupplier(supplier);
+//                em.persist(doc);
+//                supplier.addDocuments(doc);
+//            }
+//
+
+//            em.persist(supplier);
+//            em.getTransaction().commit();
+//        removeData(delegateExecution);
+//        }
+
     }
 
-    private void removeData(DelegateExecution del){
-        del.removeVariable("supplierName");
-        del.removeVariable("supplierDescription");
-        del.removeVariable("supplierITSystem");
-    }
+//    private void removeData(DelegateExecution del) {
+//        del.removeVariable("supplierName");
+//        del.removeVariable("supplierDescription");
+//        del.removeVariable("supplierITSystem");
+//    }
 
 
-    private List<Document> fileUploadToDatabase(DelegateExecution delegateExecution, List<Map<String, String>> data,List<Map<String, String>> dataName) throws IOException {
+    private List<Document> fileUploadToDatabase(DelegateExecution delegateExecution, List<Map<String, String>> data, List<Map<String, String>> dataName) throws IOException {
         List<Document> documents = new LinkedList<>();
         for (Map<String, String> aData : data) {
             LOGGER.info("DATAURL");
@@ -100,7 +159,7 @@ public class SupplierService implements JavaDelegate {
             }
             documents.get(i).setName(name);
 
-            LOGGER.info("Files"+documents.get(i).getHashcode());
+            LOGGER.info("Files" + documents.get(i).getHashcode());
             ByteArrayInputStream bais =
                     (ByteArrayInputStream) delegateExecution.getVariable("Files" + documents.get(i).getHashcode());
 
