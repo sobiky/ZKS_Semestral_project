@@ -28,7 +28,7 @@ public class EvaluationTestService implements JavaDelegate {
                 "test2 > " + delegateExecution.getVariable("otazka2") + "\n" +
                 "test3 > " + delegateExecution.getVariable("otazka3") + "\n" +
                 "result > " + delegateExecution.getVariable("result") + "\n");
-
+            removeAllCheckBoxs(arraySuccessKeys,delegateExecution);
     }
 
     private void evaulate(boolean[] booleans, DelegateExecution delegate) {
@@ -41,6 +41,13 @@ public class EvaluationTestService implements JavaDelegate {
             i++;
         }
         delegate.setVariable("result", temp);
+    }
+    private void removeAllCheckBoxs(boolean[] booleans,DelegateExecution delegate){
+        int i = 1;
+        for (boolean value : booleans) {
+            delegate.removeVariable("otazka" + i);
+            i++;
+        }
     }
 
 }

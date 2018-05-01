@@ -1,5 +1,46 @@
 <form name="DefineAllInformationSystem">
     <div class="form-group">
+        <style>
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                opacity:1;
+            }
+
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 120px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -60px;
+                opacity: 1;
+                transition: opacity 0.3s;
+            }
+
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        </style>
         <script cam-script type="text/form-script" >
         <!--<script>-->
             $scope.listInformationSystem = [];
@@ -19,9 +60,7 @@
                     value: $scope.listInformationSystem
                 });
             });
-//            document.getElementsByClassName("glyphicon").addEventListener("mousemove",function () {
-//
-//            })
+
 
         </script>
         <div>
@@ -40,29 +79,31 @@
                 <input cam-variable-name="i.description"
                        cam-variable-type="String"
                        type="text" ng-model="i.description"/>
-                <span class="glyphicon glyphicon-question-sign"></span>
-                <br>
-                <H3>Spravce</H3>
-                <label>Jmeno </label>
-                <input cam-variable-name="i.adminName"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.adminName"/><br>
-                <label>Email </label>
-                <input cam-variable-name="i.adminEmail"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.adminEmail"/><br>
-                <label>Telefon </label>
-                <input cam-variable-name="i.adminTel"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.adminTel"/><br>
-            </div>
-            <button class="btn btn-default" ng-click="addItem()">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </div>
-    </div>
-    <script cam-script type="text/form-script">
-        debugger;
+                <div class="tooltip">
+                    <div class="glyphicon glyphicon-question-sign"></div>
+                    <span class="tooltiptext">Zde uvedte slengovy popis,
+                       ktery se pouziva ve firme</span>
+                    </div>
 
-    </script>
-</form>
+
+                        <br>
+                    <H3>Spravce</H3>
+                    <label>Jmeno </label>
+                    <input cam-variable-name="i.adminName"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.adminName"/><br>
+                    <label>Email </label>
+                    <input cam-variable-name="i.adminEmail"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.adminEmail"/><br>
+                    <label>Telefon </label>
+                    <input cam-variable-name="i.adminTel"
+                           cam-variable-type="String"
+                           type="text" ng-model="i.adminTel"/><br>
+                </div>
+                <button class="btn btn-default" ng-click="addItem()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+        </div>
+    </form>
