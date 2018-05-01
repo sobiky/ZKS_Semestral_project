@@ -54,42 +54,6 @@ public class ITSystemService implements JavaDelegate {
             documents = fileUploadToDatabase(delegateExecution,data,dataName);
 
 
-//            for (Map<String, String> aData : data) {
-//                String url = aData.get("url");
-//                if (aData.get("url").charAt(aData.get("url").length() - 1) == '}') {
-//                    url = aData.get("url").substring(0, aData.get("url").length() - 2);
-//                }
-//                Document document = new Document();
-//                document.setTenant(delegateExecution.getVariable("tenant").toString());
-//                document.setUrl(aData.get("url"));
-//                LOGGER.info("*********");
-//                LOGGER.info("name=" + aData.get("name"));
-//                LOGGER.info("url=" + url);
-//                documents.add(document);
-//            }
-//            int i = 0;
-//            for (Map<String, String> aData : dataName) {
-//                documents.get(i).setType(aData.get("type"));
-//                documents.get(i).setName(aData.get("name"));
-//
-//                ByteArrayInputStream bais =
-//                        (ByteArrayInputStream) delegateExecution.getVariable(documents.get(i).getType()+"Files");
-//
-//                byte[] bytes = new byte[bais.available()];
-//                bais.read(bytes);
-//                documents.get(i).setBinaryFile(bytes);
-//
-//
-//                LOGGER.info("*********");
-//                LOGGER.info("type=" + aData.get("type"));
-//                LOGGER.info("name=" + aData.get("name"));
-//                i++;
-//            }
-//
-//            for (Document doc : documents) {
-//                LOGGER.info("DATA CO ZATIM MAM");
-//                LOGGER.info(doc.toString());
-//            }
 
 
             em.getTransaction().begin();

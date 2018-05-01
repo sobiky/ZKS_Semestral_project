@@ -1,8 +1,5 @@
 <form name="ViewDocument">
     <div class="form-group">
-        <!--//todo veci co chci dosta z me databaze
-        //todo ITsystems,suppliers,employees,dokumens-->
-        <!--<a cam-file-download="IT_Gudeline"></a>-->
 
 
         <script cam-script type="text/form-script">
@@ -113,7 +110,7 @@
 
         <h2>Organizace : {{tenant}}</h2>
         <h3>Dodavatele</h3>
-        <!--{{supplier[0].supplier.name}}-->
+
         <div ng-repeat="supp in supplier">
             Nazev dodavatele : {{supp.supplier.name}}<br>
             Popis o co se stara :{{supp.supplier.description}}<br>
@@ -149,9 +146,6 @@
         <div ng-repeat="papper in listPappers">
             Umisteni : {{papper.place}}
         </div>
-        <!--<div ng-repeat="it in itSystems">-->
-        <!--{{it.name}}-->
-        <!--</div>-->
 
         <h3>Seznam interni dokumentace</h3>
         <div ng-if="IT_Gudeline">
@@ -204,15 +198,5 @@
 
 
         </div>
-        -----TBA-----
-
-
-        <!--<a href="/engine-rest/task/{{camForm.taskId}}/variables/uploadedFile1/data" role="button">-->
-        <!--Download-->
-        <!--</a>-->
-        <!--<a cam-file-download="Play_backup"></a>-->
-        <!--<a cam-file-download="Plan_Repair"></a>-->
-        <!--<a cam-file-download="Plan_Shred"></a>-->
-        <!--<a cam-file-download="Plan_Archive"></a>-->
     </div>
 </form>

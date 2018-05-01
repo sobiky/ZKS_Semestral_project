@@ -87,9 +87,7 @@ public class DocumentsService implements JavaDelegate {
         LOGGER.info("//////////////////////VARIABLES/////////////////");
 
         em.getTransaction().commit();
-//        LOGGER.info("//////////////////////VARIABLES/////////////////");
-//        LOGGER.info(delegateExecution.getVariables().toString());
-//        LOGGER.info("//////////////////////VARIABLES/////////////////");
+
         removeAllData(delegateExecution);
 
 

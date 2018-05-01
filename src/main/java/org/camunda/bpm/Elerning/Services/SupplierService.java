@@ -87,48 +87,9 @@ public class SupplierService implements JavaDelegate {
         LOGGER.info("//////////////////////JSONPARSER-ARRAY/////////////////");
 
 
-//        Supplier supplier = new Supplier();
-        //todo treba tohle udelat pro list supplieru a ne jen pro jednoho
-//        supplier.setName(delegateExecution.getVariable("supplierName").toString());
-//        supplier.setTenant(delegateExecution.getVariable("tenant").toString());
-//        supplier.setDescription(delegateExecution.getVariable("supplierDescription").toString());
-//        if (delegateExecution.getVariable("supplierITSystem") != null) {
-//            supplier.setItSystem(delegateExecution.getVariable("supplierITSystem").toString());
-//        }
-        //todo je treba jeste udelat ukladani dokumentu supleireru  eeee
-//        TypedValue fileData = delegateExecution.getVariableTyped("supplierDataUrl");
-//        TypedValue fileName = delegateExecution.getVariableTyped("supplierFileName");
-//        LOGGER.info("ALL DATA");
-//        LOGGER.info(delegateExecution.getVariables().toString());
-//        LOGGER.info("ALL DATA");
-
-//        if (!Objects.equals(fileData.getValue().toString(), "[]")) {
-//            List<Map<String, String>> dataName = CreateNewUserForEmployee.PavelMagicParser(fileName);
-//            List<Map<String, String>> data = CreateNewUserForEmployee.PavelMagicParser(fileData);
-//            LOGGER.info(data.toArray().toString());
-//            LOGGER.info(dataName.toArray().toString());
-//            List<Document> documents = new LinkedList<>();
-//
-//            documents = fileUploadToDatabase(delegateExecution, data, dataName);
-//            for (Document doc : documents) {
-//                doc.setSupplier(supplier);
-//                em.persist(doc);
-//                supplier.addDocuments(doc);
-//            }
-//
-
-//            em.persist(supplier);
-//            em.getTransaction().commit();
-//        removeData(delegateExecution);
-//        }
-
     }
 
-//    private void removeData(DelegateExecution del) {
-//        del.removeVariable("supplierName");
-//        del.removeVariable("supplierDescription");
-//        del.removeVariable("supplierITSystem");
-//    }
+
 
 
     private List<Document> fileUploadToDatabase(DelegateExecution delegateExecution, List<Map<String, String>> data, List<Map<String, String>> dataName) throws IOException {

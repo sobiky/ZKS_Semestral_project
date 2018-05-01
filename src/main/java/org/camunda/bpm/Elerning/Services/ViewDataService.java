@@ -66,9 +66,7 @@ public class ViewDataService implements JavaDelegate {
 
         }
 
-//        for (ElectronicData el:resultITsysetms) {
-//            em.createQuery("select e from ITDepartment e where e.name = :name");
-//        }
+
 
 
         JSONArray jsonArrayDocuments = createJsonDocuments(resultDocuments);
@@ -82,14 +80,7 @@ public class ViewDataService implements JavaDelegate {
         delegateExecution.setVariable("listAllUsers", jsonArrayAllUsers.toString());
 
 
-//        tady musim spojit vyzit vechny uzivatele se stejnim tenant a provazat s mou employee a vypsa
-//        LOGGER.info("//////////////////////VARIABLES/////////////////");
-//        LOGGER.info(delegateExecution.getVariables().toString());
-//        LOGGER.info("//////////////////////VARIABLES-DOCUMENTS/////////////////");
-//        LOGGER.info(delegateExecution.getVariable("documents").toString());
-//        if(delegateExecution.getVariable("IT_Gudeline")!=null){
-//            LOGGER.info(delegateExecution.getVariable("IT_Gudeline").toString());
-//        }else LOGGER.info("NULL POINTER");
+
         for (Document doc : resultDocuments) {
 //            LOGGER.info(doc.toString());
 //            LOGGER.info("///SUPP///");

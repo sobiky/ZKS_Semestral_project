@@ -65,13 +65,7 @@
             </select>
             <br>
             <div ng-repeat="i in listElectronic">
-                <!--<select ng-model="i.systemItem"-->
-                <!--&gt;-->
-                    <!--<option value="001">Notebook</option>-->
-                    <!--<option value="002">Server</option>-->
-                    <!--<option value="003">Workstation</option>-->
-                <!--</select>-->
-                <!--<select ng-options="item for item in i.list" ng-model="i.systemItem">-->
+
                 <select ng-model="i.systemItem">
                     <option value="" >vyberte</option>
                     <option ng-repeat="item in i.list" value="{{item}}">{{item}}</option>
@@ -94,7 +88,6 @@
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
-        <!---->
 
         <!--Paper-->
         <div ng-show="papperCheck">

@@ -29,15 +29,6 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         EntityManager em = ef.createEntityManager();
         IdentityService identityService = delegateExecution.getProcessEngineServices().getIdentityService();
 
-//User for database member group IP
-        //        List<User> userList = delegateExecution.getProcessEngineServices()
-//                .getIdentityService()
-//                .createUserQuery()
-//                .memberOfGroup("IT").list();
-//        List<String> users = new ArrayList<String>();
-//        for (User user : userList) {
-//            users.add(user.getFirstName());
-//        }
 
         LOGGER.info("////////////////////////");
         LOGGER.info("All variables");
