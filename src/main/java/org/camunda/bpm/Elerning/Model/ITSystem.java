@@ -7,10 +7,10 @@ import java.util.Set;
 
 @Entity
 @Table
-public class ITDepartment implements Serializable {
+public class ITSystem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer ITDepartmentId;
+    private Integer ITSystemId;
     private String name;
     private String url;
     private String description;
@@ -21,7 +21,7 @@ public class ITDepartment implements Serializable {
     private Set<AdministratorITSystem> admin;
 
 
-    public ITDepartment(String name, String url, String description, Set<AdministratorITSystem> admin, String tenant) {
+    public ITSystem(String name, String url, String description, Set<AdministratorITSystem> admin, String tenant) {
         super();
         this.name = name;
         this.url = url;
@@ -31,17 +31,17 @@ public class ITDepartment implements Serializable {
 
     }
 
-    public ITDepartment() {
+    public ITSystem() {
         super();
         admin = new HashSet<>();
     }
 
     public Integer getITDepartmentId() {
-        return ITDepartmentId;
+        return ITSystemId;
     }
 
     public void setITDepartmentId(Integer ITDepartmentId) {
-        this.ITDepartmentId = ITDepartmentId;
+        this.ITSystemId = ITDepartmentId;
     }
 
     public String getName() {
@@ -93,8 +93,8 @@ public class ITDepartment implements Serializable {
 //todo lepsi vypis by to chtelo tedy
     @Override
     public String toString() {
-        return "ITDepartment{" +
-                "ITDepartmentId=" + ITDepartmentId +
+        return "ITSystem{" +
+                "ITSystemId=" + ITSystemId +
                 ", name='" + name + '\'' +
                 ", url='" + url + '\'' +
                 ", description='" + description + '\'' +

@@ -43,7 +43,7 @@ public class ViewDataService implements JavaDelegate {
         List<PapperData> resultPappers = queryPapper.getResultList();
 
 
-        List<ITDepartment> itDepartmentList = new ArrayList<>();
+        List<ITSystem> itSystemList = new ArrayList<>();
         List<Pair> listNetworkDisk = new ArrayList<>();
         for (ElectronicData el : resultITsysetms) {
             if (el.getNetworkDisk() != null) {
@@ -51,17 +51,17 @@ public class ViewDataService implements JavaDelegate {
                 listNetworkDisk.add(pair);
             }
 
-            Query queryITdepartment = em.createQuery("select e from ITDepartment e where e.name = :name");
+            Query queryITdepartment = em.createQuery("select e from ITSystem e where e.name = :name");
             queryITdepartment.setParameter("name", el.getITSystem());
-            ITDepartment itdepatment = (ITDepartment) queryITdepartment.getSingleResult();
+            ITSystem itdepatment = (ITSystem) queryITdepartment.getSingleResult();
             boolean checkExist = false;
-            for (ITDepartment it : itDepartmentList) {
+            for (ITSystem it : itSystemList) {
                 if (Objects.equals(it.getName(), itdepatment.getName())) {
                     checkExist = true;
                 }
             }
             if (!checkExist) {
-                itDepartmentList.add(itdepatment);
+                itSystemList.add(itdepatment);
             }
 
         }
@@ -70,7 +70,7 @@ public class ViewDataService implements JavaDelegate {
 
 
         JSONArray jsonArrayDocuments = createJsonDocuments(resultDocuments);
-        JSONArray jsonArrayITsystems = createJsonITsystems(itDepartmentList, listNetworkDisk);
+        JSONArray jsonArrayITsystems = createJsonITsystems(itSystemList, listNetworkDisk);
         JSONArray jsonArrayPapper = createJsonPapper(resultPappers);
         JSONArray jsonArrayAllUsers = createJsonAllUsers(em, delegateExecution);
 
@@ -95,7 +95,7 @@ public class ViewDataService implements JavaDelegate {
 
 
 //        LOGGER.info("///IT Systems///");
-        for (ITDepartment it : itDepartmentList) {
+        for (ITSystem it : itSystemList) {
 //            LOGGER.info(it.toString());
         }
 //        LOGGER.info("//////////////////////VARIABLES/////////////////");
@@ -117,9 +117,9 @@ public class ViewDataService implements JavaDelegate {
         return jsonArray;
     }
 
-    private JSONArray createJsonITsystems(List<ITDepartment> itDepartments, List<Pair> electronic) {
+    private JSONArray createJsonITsystems(List<ITSystem> itSystems, List<Pair> electronic) {
         JSONArray jsonArray = new JSONArray();
-        for (ITDepartment it : itDepartments) {
+        for (ITSystem it : itSystems) {
             JSONObject jso = new JSONObject();
             jso.put("name", it.getName());
             jso.put("description", it.getDescription());

@@ -88,7 +88,6 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         List<String> users = new ArrayList<>();
 
         //insert IT Employee
-        //todo nejde se mi prihlasit za IT workera
         String userNameIT = createNewUserName(delegateExecution.getVariable("ITWorkerFirstName").toString(), delegateExecution.getVariable("ITWorkerLastName").toString(), delegateExecution);
         delegateExecution.setVariable("ITWorkerUserName",userNameIT);
         User it = identityService.newUser(userNameIT);
@@ -105,7 +104,7 @@ public class CreateNewUserForEmployee implements JavaDelegate {
         userList.add(it);
 
         for (User user : userList) {
-            users.add(user.getFirstName());
+            users.add(user.getFirstName()+" "+user.getLastName());
         }
 
         LOGGER.info(customer.getValue().toString());

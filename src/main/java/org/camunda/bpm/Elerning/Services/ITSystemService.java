@@ -1,9 +1,8 @@
 package org.camunda.bpm.Elerning.Services;
 
-import org.camunda.bpm.Elerning.Config.Base64;
 import org.camunda.bpm.Elerning.CreateNewUserForEmployee;
 import org.camunda.bpm.Elerning.Model.Document;
-import org.camunda.bpm.Elerning.Model.ITDepartment;
+import org.camunda.bpm.Elerning.Model.ITSystem;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.variable.Variables;
@@ -14,9 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -27,11 +24,11 @@ public class ITSystemService implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
         EntityManager em = ef.createEntityManager();
-        Query query = em.createQuery("select e from ITDepartment e where e.tenant = :id");
+        Query query = em.createQuery("select e from ITSystem e where e.tenant = :id");
         query.setParameter("id", delegateExecution.getVariable("tenant"));
-        List<ITDepartment> result = query.getResultList();
+        List<ITSystem> result = query.getResultList();
         List<String> department = new ArrayList<String>();
-        for (ITDepartment item : result) {
+        for (ITSystem item : result) {
             department.add(item.getName());
             LOGGER.info("----------------------------------");
             LOGGER.info(item.getName());

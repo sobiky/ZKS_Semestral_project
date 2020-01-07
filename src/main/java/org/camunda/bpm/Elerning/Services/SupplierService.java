@@ -44,7 +44,6 @@ public class SupplierService implements JavaDelegate {
 //        List<Document> documents = new LinkedList<>();
         for (int i = 0; i < array.size(); i++) {
             JSONObject obje = (JSONObject) array.get(i);
-
             Supplier supplier = new Supplier();
             LOGGER.info((String) obje.get("supplierITSystem"));
             supplier.setItSystem((String) obje.get("supplierITSystem"));

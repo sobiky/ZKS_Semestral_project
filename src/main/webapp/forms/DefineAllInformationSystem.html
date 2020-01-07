@@ -1,10 +1,13 @@
 <form name="DefineAllInformationSystem">
     <div class="form-group">
         <style>
+            .table{
+                border: 1px solid black;
+            }
             .tooltip {
                 position: relative;
                 display: inline-block;
-                opacity:1;
+                opacity: 1;
             }
 
             .tooltip .tooltiptext {
@@ -41,7 +44,7 @@
             }
 
         </style>
-        <script cam-script type="text/form-script" >
+        <script cam-script type="text/form-script">
         <!--<script>-->
             $scope.listInformationSystem = [];
 
@@ -62,48 +65,64 @@
             });
 
 
+
+
+
+
         </script>
         <div>
-            <H2>Prosim vyplne Vsechny informaci systemy </H2>
+            <H2>Prosím zadejte Všechny informačí systémy, které vaše organizace používá </H2>
             <div ng-repeat="i in listInformationSystem">
-                <H3>Informacni system</H3>
-                <label>Nazev</label>
-                <input cam-variable-name="i.name"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.name"/><br>
-                <label>Url</label>
-                <input cam-variable-name="i.url"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.url"/><br>
-                <label>Popis</label>
-                <input cam-variable-name="i.description"
-                       cam-variable-type="String"
-                       type="text" ng-model="i.description"/>
-                <div class="tooltip">
-                    <div class="glyphicon glyphicon-question-sign"></div>
-                    <span class="tooltiptext">Zde uvedte slengovy popis,
-                       ktery se pouziva ve firme</span>
-                    </div>
-
-
-                        <br>
-                    <H3>Spravce</H3>
-                    <label>Jmeno </label>
-                    <input cam-variable-name="i.adminName"
-                           cam-variable-type="String"
-                           type="text" ng-model="i.adminName"/><br>
-                    <label>Email </label>
-                    <input cam-variable-name="i.adminEmail"
-                           cam-variable-type="String"
-                           type="text" ng-model="i.adminEmail"/><br>
-                    <label>Telefon </label>
-                    <input cam-variable-name="i.adminTel"
-                           cam-variable-type="String"
-                           type="text" ng-model="i.adminTel"/><br>
-                </div>
-                <button class="btn btn-default" ng-click="addItem()">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
+                <table class="table">
+                    <tr><td><H3>Informační systém</H3></td><td></td></tr>
+                    <tr>
+                        <td>Název</td>
+                        <td><input cam-variable-name="i.name"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Url</td>
+                        <td><input cam-variable-name="i.url"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.url"/></td>
+                    </tr>
+                    <tr>
+                        <td>Popis</td>
+                        <td><input cam-variable-name="i.description"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.description"/>
+                            <div class="tooltip">
+                                <div class="glyphicon glyphicon-question-sign"></div>
+                                <span class="tooltiptext">Zde uveďte slengový popis,
+                                    ktery se použiva ve firmě</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr><td><H3>Správce</H3></td><td></td></tr>
+                    <tr>
+                        <td>Jméno a příjmení</td>
+                        <td><input cam-variable-name="i.adminName"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.adminName"/></td>
+                    </tr>
+                    <tr>
+                        <td>Email </td>
+                        <td><input cam-variable-name="i.adminEmail"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.adminEmail"/></td>
+                    </tr>
+                    <tr>
+                    <td>Telefon </td>
+                        <td><input cam-variable-name="i.adminTel"
+                                   cam-variable-type="String"
+                                   type="text" ng-model="i.adminTel"/></td>
+                    </tr>
+                </table>
             </div>
+            <button class="btn btn-default" ng-click="addItem()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
         </div>
-    </form>
+    </div>
+</form>

@@ -15,8 +15,8 @@ public class AdministratorITSystem implements Serializable {
     private String phone;
 
     @ManyToOne
-    @JoinColumn(name="ITDepartmentId")
-    private ITDepartment system;
+    @JoinColumn(name="ITSystemId")
+    private ITSystem system;
 
     public AdministratorITSystem(String adminName, String email, String phone) {
         super();
@@ -63,11 +63,11 @@ public class AdministratorITSystem implements Serializable {
 
 
 
-    public ITDepartment getSystem() {
+    public ITSystem getSystem() {
         return system;
     }
 
-    public void setSystem(ITDepartment system) {
+    public void setSystem(ITSystem system) {
         this.system = system;
     }
 

@@ -2,7 +2,7 @@ package org.camunda.bpm.Elerning.Services;
 
 import org.camunda.bpm.Elerning.CreateNewUserForEmployee;
 import org.camunda.bpm.Elerning.Model.AdministratorITSystem;
-import org.camunda.bpm.Elerning.Model.ITDepartment;
+import org.camunda.bpm.Elerning.Model.ITSystem;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.variable.value.TypedValue;
@@ -14,8 +14,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class ITDepartmentService implements JavaDelegate {
-    private ITDepartment itDepartment;
-    private final static Logger LOGGER = Logger.getLogger("ITDepartment");
+    private ITSystem itSystem;
+    private final static Logger LOGGER = Logger.getLogger("ITSystem");
     EntityManagerFactory ef = Persistence.createEntityManagerFactory("Eclipselink_JPA");
     EntityManager em = ef.createEntityManager();
 
@@ -33,7 +33,7 @@ public class ITDepartmentService implements JavaDelegate {
             em.getTransaction().begin();
 
             //todo podivat se na to co mam poslat drive a popripade poprosit pavla
-            ITDepartment department = new ITDepartment();
+            ITSystem department = new ITSystem();
             department.setITDepartmentId(0);
             department.setDescription(item.get("description"));
             department.setName(item.get("name"));
