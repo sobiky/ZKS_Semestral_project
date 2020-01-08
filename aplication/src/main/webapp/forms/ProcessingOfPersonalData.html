@@ -1,0 +1,111 @@
+<form name="ProcessingOfPersonalData">
+    <div class="form-group">
+
+        <script cam-script type="text/form-script">
+    <!--<script>-->
+    $scope.listPappers = [];
+    $scope.listElectronic = [];
+    $scope.addItemPapper = function(){
+        $scope.listPappers.push({
+            place: ''
+        });
+    };
+    $scope.addItemElectronic = function(systemsList){
+    <!--console.log(systemsList);-->
+        $scope.listElectronic.push({
+            networkDisk: '',
+            systemItem: '',
+            list: systemsList,
+            networkDiskCheckbox: ''
+        });
+
+ <!--console.log($scope.listElectronic);-->
+    };
+
+
+     camForm.on('variables-restored', function() {
+        $scope.systemsList = camForm.variableManager.variableValue('systemsList');
+        camForm.variableManager.createVariable({
+                    name: 'listElectronic',
+                    type: 'json',
+                    value: $scope.listElectronic
+                });
+
+        camForm.variableManager.createVariable({
+                    name: 'listPappers',
+                    type: 'json',
+                    value: $scope.listPappers
+                });
+    });
+     <!--console.log($scope.listElectronic);-->
+    <!--debugger;-->
+
+    </script>
+
+        <H2>Forma uchování osobních údajů</H2>
+        <label>Elektronicky :</label>
+        <input type="checkbox"
+               cam-variable-name="electronic"
+               cam-variable-type="Boolean"/>
+        <br>
+        <label>Papirove :</label>
+        <input type="checkbox"
+               cam-variable-name="papperCheck"
+               cam-variable-type="Boolean"/>
+        <br>
+        <hr>
+        <!--Elektronic-->
+        <div ng-show="electronic">
+            <h3>Elektronicky</h3>
+            <label>Informacni system : </label>
+            <select hidden
+                    cam-variable-name="systemItem"
+                    cam-variable-type="String"
+                    cam-choices="systemsList">
+            </select>
+            <br>
+            <div ng-repeat="i in listElectronic">
+
+                <select ng-model="i.systemItem">
+                    <option value="" >vyberte</option>
+                    <option ng-repeat="item in i.list" value="{{item}}">{{item}}</option>
+                </select>
+                <label for="checkbox">Síťový disk :</label>
+                <input type="checkbox" id="checkbox"
+                       cam-variable-name="i.networkDiskCheckbox"
+                       cam-variable-type="Boolean"/>
+                <br>
+                <div ng-show="i.networkDiskCheckbox">
+                    <label>Vlozte sitovy disk :</label>
+                    <input type="text"
+                           placeholder="vlozte zde"
+                           cam-variable-name="i.networkDisk"
+                           cam-variable-type="String"/>
+                </div>
+
+            </div>
+            <button class="btn btn-default" ng-click="addItemElectronic(systemsList)">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+
+        <!--Paper-->
+        <div ng-show="papperCheck">
+            <h3>Papirove</h3>
+            <article> Sem prosim vlozte umisteni papirove formy dat.
+                (napr. kartoteka B6, regal 5 policka 7 atd.)
+
+            </article>
+            <div ng-repeat="p in listPappers">
+            <label>Umisteni : </label>
+            <input type="text"
+                   placeholder="vlozte zde"
+                   cam-variable-name="p.place"
+                   cam-variable-type="String"/>
+            </div>
+            <button class="btn btn-default" ng-click="addItemPapper()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    </div>
+</form>

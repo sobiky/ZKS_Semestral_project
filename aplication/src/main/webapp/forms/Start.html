@@ -1,0 +1,100 @@
+<form name="Starting">
+    <div class="form-group">
+        <script cam-script type="text/form-script">
+            var listUsers = $scope.listUsers=[];
+            var ITWorker = {firstName:'', lastName: '',email: '',group:'IT'};
+
+            $scope.addItem = function() {
+            $scope.listUsers.push({firstName:'', lastName: '',email: '',department:''});
+            };
+
+            $scope.removeItem = function(index) {
+            $scope.listUsers.splice(index, 1);
+            };
+            camForm.on('form-loaded', function() {
+            camForm.variableManager.createVariable({
+            name :'listUsers',
+            type:'json',
+            value:$scope.listUsers
+            });
+            });
+
+
+
+
+
+        </script>
+
+        <div>Nazev spolecnosti: <input cam-variable-name="tenant"
+                                       cam-variable-type="String"
+                                       type="text" required></div>
+        <div>IT pracovnik</div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="20%">Jmeno</th>
+                <th width="20%">Primeni</th>
+                <th width="20%">Email</th>
+            </tr>
+            </thead>
+            <tr>
+                <td><input cam-variable-name="ITWorkerFirstName"
+                           cam-variable-type="String"
+                           type="text" ng-model="ITWorkerFirstName" required/></td>
+                <td><input cam-variable-name="ITWorkerLastName"
+                           cam-variable-type="String"
+                           type="text" ng-model="ITWorkerLastName" required/></td>
+
+                <td><input cam-variable-name="ITWorkerEmail"
+                           cam-variable-type="String"
+                           type="email" ng-model="ITWorkerEmail" required/></td>
+            </tr>
+            <tbody>
+
+            </tbody>
+
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th width="20%">Jmeno</th>
+                    <th width="20%">Primeni</th>
+                    <th width="20%">Email</th>
+                    <th width="20%">Oddeleni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="i in listUsers">
+                    <td><input cam-variable-name="i.firstName"
+                               cam-variable-type="String"
+                               type="text" ng-model="i.firstName"/></td>
+                    <td><input cam-variable-name="i.lastName"
+                               cam-variable-type="String"
+                               type="text" ng-model="i.lastName"/></td>
+                    <!--//todo dobelat validaci pro email-->
+                    <td><input cam-variable-name="i.email"
+                               cam-variable-type="String"
+                               type="email" ng-model="i.email"/></td>
+                    <td><input cam-variable-name="i.department"
+                               cam-variable-type="String"
+                               type="text" ng-model="i.department"/></td>
+                    <td>
+                        <button class="btn btn-default" ng-click="removeItem($index)">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <button class="btn btn-default" ng-click="addItem()">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </table>
+    </div>
+</form>

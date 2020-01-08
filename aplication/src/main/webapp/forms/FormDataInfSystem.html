@@ -1,0 +1,158 @@
+<form name="FormDataInfSystem">
+    <div class="form-group">
+
+        <label>IT Smernice</label> <input type="radio" ng-model="file0" name="file0" value="yes"> Ano
+        <input type="radio" ng-model="file0" name="file0" value="no"> Ne
+        <div ng-if="file0=='yes'"><input type="file" id="IT_Gudeline"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+
+            <input type="text" style="display: none"
+                   cam-variable-type="String"
+                   cam-variable-name="IT_Gudeline"
+                   name="IT_Gudeline"/>
+            <button ng-click="upload('IT_Gudeline')">Upload</button>
+        </div>
+
+        <br>
+        <label>Plan Zalohovani</label> <input type="radio" ng-model="file1" name="file1" value="yes"> Ano
+        <input type="radio" ng-model="file1" name="file1" value="no"> Ne
+        <div ng-if="file1=='yes'"><input type="file" id="Play_backup"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Play_backup"
+                   name="Play_backup"/>
+            <button ng-click="upload('Play_backup')">Upload</button>
+        </div>
+        <br>
+        <label>Plan Opravy</label> <input type="radio" ng-model="file2" name="file2" value="yes"> Ano
+        <input type="radio" ng-model="file2" name="file2" value="no"> Ne
+        <div ng-if="file2=='yes'"><input type="file" id="Plan_Repair"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Repair"
+                   name="Plan_Repair"/>
+            <button ng-click="upload('Plan_Repair')">Upload</button>
+        </div>
+        <br>
+        <label>Plan Skartace</label> <input type="radio" ng-model="file3" name="file3" value="yes"> Ano
+        <input type="radio" ng-model="file3" name="file3" value="no"> Ne
+        <div ng-if="file3=='yes'"><input type="file" id="Plan_Shred"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Shred"
+                   name="Plan_Shred"/>
+            <button ng-click="upload('Plan_Shred')">Upload</button>
+        </div>
+        <br>
+        <label>Plan Archivace</label> <input type="radio" ng-model="file4" name="file4" value="yes"> Ano
+        <input type="radio" ng-model="file4" name="file4" value="no"> Ne
+        <div ng-if="file4=='yes'"><input type="file" id="Plan_Archive"
+                                         cam-max-filesize="10000000"
+                                         accept="application/pdf"/>
+            <input type="hidden" class="form-control"
+                   cam-variable-type="String"
+                   cam-variable-name="Plan_Archive"
+                   name="Plan_Archive"/>
+            <button ng-click="upload('Plan_Archive')">Upload</button>
+        </div>
+        <br>
+
+
+
+        <script cam-script type="text/form-script">
+            $scope.camundaDataUrl = [];
+            $scope.dataInputName = [];
+            inject(['$http', 'Uri', function ($http, Uri) {
+                camForm.on('form-loaded', function () {
+                    $http.get(Uri.appUri('engine://engine/:engine/task/' + camForm.taskId)).success(function (result) {
+                        $scope.upload = function (nameId) {
+                            console.log(nameId);
+                            console.log($scope.camundaDataUrl.length);
+                            var check = false;
+                            for (let i = 0; i < $scope.camundaDataUrl.length; i++) {
+                                <!--console.log($scope.camundaDataUrl[i].url);-->
+                                if ($scope.camundaDataUrl[i].url == Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)) {
+                                    check = true;
+                                    console.log("duplicita : value = " + check);
+                                    break;
+                                }
+                            }
+                            if (!check) {
+                                $scope.camundaDataUrl.push({
+                                    name: nameId,
+                                    url: Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId)
+                                });
+
+
+                                $scope.inputName = document.getElementById(nameId).files[0].name + "";
+                                document.getElementsByName(nameId)[0].value = $scope.inputName;
+                                var formData = new FormData();
+                                formData.append('data', document.getElementById(nameId).files[0]);
+                                $http.post(Uri.appUri('engine://engine/:engine/process-instance/' + result.processInstanceId + '/variables/' + nameId + '/data'), formData, {
+                                    transformRequest: angular.identity,
+                                    headers: {'Content-Type': undefined}
+                                });
+
+
+                                $scope.dataInputName.push({
+                                    type: nameId,
+                                    name: document.getElementById(nameId).files[0].name
+                                });
+
+
+                                var fileList = document.getElementById(nameId).files;
+                                console.log(fileList);
+                                var fileReader = new FileReader();
+                                fileReader.readAsArrayBuffer(fileList[0]);
+                                if (fileReader && fileList && fileList.length) {
+                                    fileReader.onload = function () {
+                                        var data = fileReader.result;
+                                        console.log(camForm);
+                                        camForm.variableManager.createVariable({
+                                            name: nameId + 'Files',
+                                            type: 'File',
+                                            value: btoa(
+                                                new Uint8Array(data)
+                                                    .reduce((data, byte) => data + String.fromCharCode(byte), '')),
+                                            valueInfo: {
+                                                filename: document.getElementById(nameId).files[0].name
+                                            }
+                                        });
+
+                                    };
+                                }
+
+
+                            }
+
+
+                        };
+                    });
+                });
+            }]);
+
+            camForm.variableManager.createVariable({
+                name: 'camundaDataUrl',
+                type: 'json',
+                value: $scope.camundaDataUrl
+            });
+
+            camForm.variableManager.createVariable({
+                name: 'dataInputName',
+                type: 'json',
+                value: $scope.dataInputName
+            });
+
+
+        </script>
+
+
+    </div>
+</form>

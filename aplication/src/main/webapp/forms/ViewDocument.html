@@ -1,0 +1,202 @@
+<form name="ViewDocument">
+    <div class="form-group">
+
+
+        <script cam-script type="text/form-script">
+        <!--<script>-->
+            camForm.on('form-loaded', function () {
+                camForm.variableManager.fetchVariable('IT_Gudeline');
+                camForm.variableManager.fetchVariable('Play_backup');
+                camForm.variableManager.fetchVariable('Plan_Repair');
+                camForm.variableManager.fetchVariable('Plan_Shred');
+                camForm.variableManager.fetchVariable('Plan_Archive');
+
+                camForm.variableManager.fetchVariable('documentsName');
+                camForm.variableManager.fetchVariable('documents');
+                camForm.variableManager.fetchVariable('itSystems');
+                camForm.variableManager.fetchVariable('listPappers');
+                camForm.variableManager.fetchVariable('listAllUsers');
+
+                camForm.variableManager.fetchVariable('tenant');
+            });
+            camForm.on('variables-restored', function () {
+                $scope.IT_Gudeline = camForm.variableManager.variableValue('IT_Gudeline');
+                $scope.Play_backup = camForm.variableManager.variableValue('Play_backup');
+                $scope.Plan_Repair = camForm.variableManager.variableValue('Plan_Repair');
+                $scope.Plan_Shred = camForm.variableManager.variableValue('Plan_Shred');
+                $scope.Plan_Archive = camForm.variableManager.variableValue('Plan_Archive');
+
+                $scope.documentsName = camForm.variableManager.variableValue('documentsName');
+                $scope.documents = JSON.parse(camForm.variableManager.variableValue('documents'));
+                $scope.itSystems = JSON.parse(camForm.variableManager.variableValue('itSystems'));
+                $scope.listPappers = JSON.parse(camForm.variableManager.variableValue('listPappers'));
+                $scope.listAllUsers = JSON.parse(camForm.variableManager.variableValue('listAllUsers'));
+
+
+
+                $scope.IT_GudelineName = "default";
+                $scope.Play_backupName = "default";
+                $scope.Plan_RepairName = "default";
+                $scope.Plan_ShredName = "default";
+                $scope.Plan_ArchiveName = "default";
+
+                $scope.supplier = new Array();
+
+
+                <!--console.log($scope.documentsName);-->
+
+                for (let i = 0; i < $scope.documents.length; i++) {
+                    <!--debugger-->
+                    if ($scope.documents[i].supplier != null) {
+                        if (!checkExistSupplier($scope.documents[i].supplier,$scope.supplier)) {
+//                            $scope.supplier.push($scope.documents[i].supplier);
+                            $scope.supplier.push({
+                                supplier : $scope.documents[i].supplier,
+                                documents : []
+                            });
+                        }
+                        pushFileToSupplier($scope.documents[i],$scope.supplier)
+                    }
+                    <!--console.log($scope.documents[i].name);-->
+                    if ($scope.documents[i].type === "IT_Gudeline") {
+                        $scope.IT_GudelineName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Play_backup") {
+                        $scope.Play_backupName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Repair") {
+                        $scope.Plan_RepairName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Shred") {
+                        $scope.Plan_ShredName = $scope.documents[i].name;
+                    }
+                    if ($scope.documents[i].type === "Plan_Archive") {
+                        $scope.Plan_ArchiveName = $scope.documents[i].name;
+                    }
+                }
+
+                console.log($scope.supplier);
+                console.log($scope.documents);
+                console.log($scope.itSystems);
+                console.log($scope.listPappers);
+                console.log($scope.listAllUsers);
+                <!--console.log(JSON.parse($scope.documents));-->
+
+
+                $scope.tenant = camForm.variableManager.variableValue('tenant');
+            });
+
+            <!--debugger-->
+            function checkExistSupplier(supplier, arrayDocuments) {
+            if(arrayDocuments.length == 0)return false;
+                for (let i = 0; i < arrayDocuments.length; i++) {
+                    if (arrayDocuments[i].supplier.name == supplier.name) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function pushFileToSupplier(document, arrayDocuments) {
+                for (let i = 0 ; i< arrayDocuments.length;i++){
+                    if(document.supplier.name == arrayDocuments[i].supplier.name){
+                        arrayDocuments[i].documents.push(document);
+                    }
+                }
+            }
+
+        </script>
+
+
+        <h2>Organizace : {{tenant}}</h2>
+        <h3>Dodavatele</h3>
+
+        <div ng-repeat="supp in supplier">
+            Nazev dodavatele : {{supp.supplier.name}}<br>
+            Popis o co se stara :{{supp.supplier.description}}<br>
+            System o ktery se stara : {{supp.supplier.itsystem}}<br>
+            <div>Smlouvy</div>
+            <p ng-repeat="doc in supp.documents">
+                <a href="{{doc.url}}/data" download="{{doc.name}}"
+                   role="button">{{doc.name}}
+                </a>
+            </p>
+            <hr>
+        </div>
+
+        <h3>Informacni systemy s osobnimy udaji</h3>
+        <div ng-repeat="it in itSystems">
+            Nazev informacniho systemu : {{it.name}}<br>
+            Popis : {{it.description}}<br>
+            Url : {{it.url}}<br>
+
+            <h4>Sitove disky</h4>
+            <divd ng-repeat="disk in it.arrayNetworkDisks">
+                <b>Disk</b> : {{disk.networkDisk}}<br>
+            </divd>
+
+            <h4>Administrator IT systemu</h4>
+            <div ng-repeat="admin in it.arrayAdmins">
+                <b>Jmeno</b> : {{admin.name}}, <b>Email</b> : {{admin.email}} ,<b> Telefon </b> : {{admin.phone}}
+            </div>
+
+            <hr>
+        </div>
+        <h3>Umisteni papirovych dat</h3>
+        <div ng-repeat="papper in listPappers">
+            Umisteni : {{papper.place}}
+        </div>
+
+        <h3>Seznam interni dokumentace</h3>
+        <div ng-if="IT_Gudeline">
+            <div>Gudeline :</div>
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/IT_Gudeline/data" download="{{IT_GudelineName}}"
+               role="button">
+                IT_Gudeline
+            </a>
+            <br>
+        </div>
+
+        <div ng-if="Play_backup">
+            <div>Plan zalohovani :</div>
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Play_backup/data" download="{{Play_backupName}}"
+               role="button">
+                Play_backup
+            </a>
+            <br>
+        </div>
+
+        <div ng-if="Plan_Repair">
+            <div>Plan opravy :</div>
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Repair/data" download="{{Plan_RepairName}}"
+               role="button">
+                Plan_Repair
+            </a>
+            <br>
+        </div>
+
+        <div ng-if="Plan_Shred">
+            <div>Plan skratovani :</div>
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Shred/data" download="{{Plan_ShredName}}"
+               role="button">
+                Plan_Shred
+            </a>
+            <br>
+        </div>
+
+        <div ng-if="Plan_Archive">
+            <div>Plan archivace :</div>
+            <a href="/engine-rest/task/{{camForm.taskId}}/variables/Plan_Archive/data" download="{{Plan_ArchiveName}}"
+               role="button">
+                Plan_Archive
+            </a>
+            <br>
+        </div>
+        <h3>Organizacni struktura</h3>
+        <div ng-repeat="user in listAllUsers">
+            <b>Jmeno : </b> {{user.firstName}}, <b>Primeni : </b> {{user.lastName}}, <b>Email : </b> {{user.email}}, <b ng-show="user.department">Oddeleni</b> {{user.department}}
+
+
+        </div>
+    </div>
+</form>

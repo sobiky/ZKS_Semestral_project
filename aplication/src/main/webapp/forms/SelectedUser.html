@@ -1,0 +1,16 @@
+<form name="SelectedUserForm">
+    <p> Seznam uživatelů, kterým se pošlou přihlašovací údaje do camundy:</p>
+    <div class="form-group">
+        <div ng-repeat="name in names">{{name}}
+        </div>
+    </div>
+    <script cam-script type="text/form-script">
+     camForm.on('form-loaded', function() {
+        camForm.variableManager.fetchVariable('names');
+    });
+     camForm.on('variables-restored', function() {
+        $scope.names = camForm.variableManager.variableValue('names');
+    });
+    <!--debugger;-->
+    </script>
+</form>
